@@ -22,14 +22,12 @@
     {
       "src": "icons/desktop-screenshot.png",
       "sizes": "1200x800",
-      "type": "image/png",
-      "form_factor": "wide"
+      "type": "image/png"
     },
     {
       "src": "icons/mobile-screenshot.png",
       "sizes": "400x800",
-      "type": "image/png",
-      "form_factor": "narrow"
+      "type": "image/png"
     }
   ]
 }

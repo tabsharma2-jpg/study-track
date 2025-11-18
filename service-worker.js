@@ -1,19 +1,19 @@
-const CACHE_NAME = "study-tracker-v1";
-const ASSETS = [
+const CACHE_NAME = "study-tracker-v2";
+const STATIC_ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-  "./worker.js"
+  "./service-worker.js"
 ];
 
 // Install event
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("Caching assets...");
-      return cache.addAll(ASSETS);
+      console.log("Caching static assets...");
+      return cache.addAll(STATIC_ASSETS);
     })
   );
   self.skipWaiting();
@@ -24,7 +24,9 @@ self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
-        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
       );
     })
   );
@@ -33,17 +35,19 @@ self.addEventListener("activate", (e) => {
 
 // Fetch event
 self.addEventListener("fetch", (e) => {
-  e.respondWith(
-    caches.match(e.request).then((res) => {
-      return (
-        res ||
-        fetch(e.request).catch(() => {
-          // Offline fallback
-          if (e.request.mode === "navigate") {
-            return caches.match("./index.html");
-          }
-        })
-      );
-    })
-  );
+  if (e.request.mode === "navigate") {
+    // For page navigation: try network first, fallback to cache
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => res)
+        .catch(() => caches.match("./index.html"))
+    );
+  } else {
+    // For static assets: cache first, then network
+    e.respondWith(
+      caches.match(e.request).then((cachedRes) => {
+        return cachedRes || fetch(e.request);
+      })
+    );
+  }
 });
