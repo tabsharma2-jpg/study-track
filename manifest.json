@@ -1,0 +1,35 @@
+{
+  "name": "Study Tracker",
+  "short_name": "StudyTrack",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#2575fc",
+  "theme_color": "#2575fc",
+  "description": "A simple study planner, tracker and focus app.",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/desktop-screenshot.png",
+      "sizes": "1200x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "icons/mobile-screenshot.png",
+      "sizes": "400x800",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}
