@@ -5,18 +5,129 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Study Tracker</title>
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%232575fc'/><text x='50' y='60' font-size='48' text-anchor='middle' fill='white' font-family='Poppins,Segoe UI,Arial'>ST</text></svg>'">
+<!-- favicon (embedded SVG) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%232575fc'/><text x='50' y='60' font-size='48' text-anchor='middle' fill='white' font-family='Poppins,Segoe UI,Arial'>ST</text></svg>">
 
+<!-- PWA manifest -->
 <link rel="manifest" href="manifest.json">
 
+<!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link rel="stylesheet" href="style.css">
-</head>
+<style>
+/* ---------- Theme variables (will be updated by JS) ---------- */
+:root{
+  --bg-grad: linear-gradient(120deg,#6a11cb,#2575fc);
+  --card-bg: rgba(255,255,255,0.03);
+  --glass: rgba(255,255,255,0.10);
+  --card: rgba(255,255,255,0.12);
+  --muted: rgba(255,255,255,0.8);
+  --accent: #fff;
+  --accent-2: #e3e3e3;
+  --btn-bg: rgba(255,255,255,0.08);
+  --btn-primary-bg: #ffffff;
+  --btn-primary-color: #2b3aef;
+  --shadow: 0 10px 40px rgba(2,6,23,0.6);
+  --rounded: 14px;
+  --glass-blur: 8px;
+}
 
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg-grad);
+  font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--accent);
+  transition:background .35s ease;
+}
+.container{
+  width:96%;
+  max-width:1100px;
+  height:92vh;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(var(--glass-blur));
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* ---------- Header ---------- */
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#6a11cb,#2575fc);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:20px;box-shadow:0 8px 24px rgba(39,35,66,0.25)}
+.title{font-size:20px;font-weight:700}
+.subtitle{font-size:12px;color:var(--accent-2)}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{background:var(--btn-bg);border:1px solid rgba(255,255,255,0.06);color:var(--accent);padding:8px 12px;border-radius:10px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--btn-primary-bg);color:var(--btn-primary-color);border:none;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+.toggle{display:inline-flex;align-items:center;gap:8px}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+/* Theme selector */
+.select, .fileInput{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--accent)}
+
+/* ---------- Layout ---------- */
+.grid{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:4px;height:calc(100% - 120px)}
+.left{overflow:auto;padding-right:8px}
+.right{overflow:auto;padding-left:8px}
+
+/* ---------- Card + section styles ---------- */
+.section, .widget{background:var(--card-bg);padding:14px;border-radius:var(--rounded);margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.12);transition:transform .35s ease, opacity .35s}
+.section:hover, .widget:hover{transform:translateY(-6px)}
+.welcomeCard{width:88%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));padding:26px;border-radius:14px;display:flex;gap:18px;align-items:center;box-shadow:0 18px 60px rgba(0,0,0,0.6);transform:translateY(20px);opacity:0}
+.welcomeCard.show{transform:translateY(0);opacity:1}
+.input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--accent);margin-top:10px}
+.small{font-size:13px;color:var(--accent-2);margin-top:6px}
+.taskForm{display:flex;gap:8px;flex-wrap:wrap}
+.taskForm input, .taskForm select{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--accent);min-width:120px}
+.addBtn{padding:10px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--btn-primary-bg),#e6e6e6);color:var(--btn-primary-color);font-weight:700;cursor:pointer}
+.taskCard{background:linear-gradient(135deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;border-left:6px solid #9C27B0;transition:transform .18s}
+.taskCard:hover{transform:translateY(-4px)}
+.taskMeta{flex:1;padding-right:12px}
+.taskName{font-weight:700}
+.taskSub{font-size:12px;color:var(--accent-2);margin-top:6px}
+.timerDisplay{font-weight:700;font-size:14px;color:var(--accent)}
+.actionBtns{display:flex;gap:6px}
+.progress{height:10px;background:rgba(255,255,255,0.04);border-radius:999px;margin-top:10px;overflow:hidden}
+.progressInner{height:100%;background:linear-gradient(90deg,#6a11cb,#2575fc);width:0;transition:width .4s}
+.chartWrap{height:200px}
+#focusModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:60;backdrop-filter:blur(4px);background:rgba(2,6,23,0.5);transition:opacity .25s}
+.focusCard{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));padding:20px;border-radius:14px;text-align:center;min-width:300px}
+.focusTime{font-size:48px;font-weight:700;margin:10px 0}
+.powered{position:fixed;right:12px;bottom:8px;font-size:12px;color:rgba(255,255,255,0.6);z-index:70}
+.small-muted{font-size:12px;color:rgba(255,255,255,0.7)}
+.timetable-item{background:rgba(255,255,255,0.02);padding:18px;border-radius:10px;text-align:center;cursor:pointer;transition:transform .12s}
+.timetable-item:hover{transform:translateY(-4px)}
+
+/* Auto Focus full screen */
+.autofocus-on .container{position:fixed;inset:0;margin:0;border-radius:0;height:100vh;z-index:100;background:var(--bg-grad);display:flex;align-items:center;justify-content:center}
+.autofocus-on body{overflow:hidden}
+
+/* Theme dark */
+body.dark{--bg-grad:linear-gradient(120deg,#0f1724,#071633);background:linear-gradient(120deg,#0f1724,#071633)}
+body.dark .logo{box-shadow:none}
+
+/* Micro animations */
+.fade-in{animation:fadeIn .45s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* responsive */
+@media (max-width:980px){.grid{grid-template-columns:1fr}.welcomeCard{flex-direction:column}}
+</style>
+</head>
 <body>
 <div class="container" id="app">
-
   <!-- HEADER -->
   <div class="header">
     <div class="brand">
@@ -27,48 +138,54 @@
       </div>
     </div>
 
-    <div class="actions">
+    <div class="header-actions">
+      <!-- Theme pack selector -->
+      <select id="themePack" class="select" title="Theme packs" aria-label="Theme packs">
+        <option value="default">Purple / Blue (Default)</option>
+        <option value="neo-blue">Neo Blue</option>
+        <option value="sunset">Sunset Orange</option>
+        <option value="mint">Mint Green</option>
+        <option value="dark-pro">Dark Pro</option>
+        <option value="auto">Auto (Time-based)</option>
+      </select>
       <div class="toggle small-muted" title="Toggle theme">
         <button class="btn" id="themeToggle">Dark</button>
       </div>
-
-      <!-- Focus Button -->
       <button class="btn" id="openFocus">Focus</button>
-
-      <!-- NEW INSTALL BUTTON -->
-      <button class="btn" id="installBtn" style="display:none;">Install</button>
-    </div>
+<button class="btn primary" id="installBtn" style="display:none;">Download App</button>
+ </div>
   </div>
 
   <!-- GRID -->
   <div class="grid">
-
     <!-- LEFT PANEL -->
     <div class="left">
 
       <!-- USER CARD -->
-      <div class="section" id="userCard">
+      <div class="section fade-in" id="userCard">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-weight:800;font-size:18px" id="userHello">Hello, Student</div>
             <div class="small-muted" id="userClassDisplay">Class / Exam</div>
           </div>
-          <button class="btn" id="editProfileBtn">Edit</button>
+          <div>
+            <button class="btn" id="editProfileBtn">Edit</button>
+          </div>
         </div>
       </div>
 
       <!-- TASKS -->
-      <div class="section">
+      <div class="section fade-in">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <h3 style="margin:0">Tasks</h3>
           <div class="small-muted" id="taskSummary">0 tasks • 0 min</div>
         </div>
 
         <div class="taskForm" style="margin-top:12px">
-          <input id="taskTitle" placeholder="Task name">
-          <input id="taskHours" type="number" min="0" placeholder="hrs" style="width:80px">
-          <input id="taskMins" type="number" min="0" placeholder="mins" style="width:80px">
-          <select id="taskSub" style="min-width:120px">
+          <input id="taskTitle" placeholder="Task name" aria-label="Task name">
+          <input id="taskHours" type="number" min="0" placeholder="hrs" style="width:80px" aria-label="hours">
+          <input id="taskMins" type="number" min="0" placeholder="mins" style="width:80px" aria-label="minutes">
+          <select id="taskSub" style="min-width:120px" aria-label="subject">
             <option value="">Subject</option>
             <option>Math</option>
             <option>Physics</option>
@@ -83,33 +200,33 @@
       </div>
 
       <!-- TIMETABLE -->
-      <div class="section">
+      <div class="section fade-in">
         <h3 style="margin:0">Quick Timetable</h3>
-        <div class="small-muted" style="margin-top:6px">Click to add slot</div>
+        <div class="small-muted" style="margin-top:6px">Click to add slot (you will receive a reminder at the time)</div>
         <div id="miniTable" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px"></div>
       </div>
-
     </div>
 
     <!-- RIGHT PANEL -->
     <div class="right">
-      <div class="widget">
+      <div class="widget fade-in">
         <h4 style="margin:0">Progress (last 7 days)</h4>
         <div class="chartWrap">
           <canvas id="progressChart"></canvas>
         </div>
       </div>
 
-      <div class="widget">
+      <div class="widget fade-in">
         <h4 style="margin:0">Focus</h4>
         <div class="small-muted" style="margin-top:6px">Quick start Pomodoro</div>
         <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-          <input id="quickFocusMins" type="number" value="25" style="width:70px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:white">
+          <input id="quickFocusMins" type="number" value="25" style="width:70px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--accent)">
           <button class="addBtn" id="quickStartFocus">Start</button>
+          <label style="font-size:12px;margin-left:8px"><input type="checkbox" id="autoFocusToggle"> Auto Focus</label>
         </div>
       </div>
 
-      <div class="widget">
+      <div class="widget fade-in">
         <h4 style="margin:0">Today</h4>
         <div class="small-muted" style="margin-top:6px" id="todaySummary">No study yet</div>
       </div>
@@ -150,8 +267,8 @@
 </div>
 
 <!-- FOCUS MODAL -->
-<div id="focusModal" class="hidden">
-  <div class="focusCard">
+<div id="focusModal" class="">
+  <div class="focusCard" role="dialog" aria-modal="true" aria-labelledby="focusTitle">
     <h3 id="focusTitle">Focus Session</h3>
     <div id="focusTimer" class="focusTime">25:00</div>
     <div style="display:flex;gap:8px;justify-content:center">
@@ -159,16 +276,707 @@
       <button class="btn" id="focusPauseBtn">Pause</button>
       <button class="btn" id="focusCloseBtn">Close</button>
     </div>
+    <div style="margin-top:10px;font-size:13px;color:var(--accent-2)" id="focusTaskLabel"></div>
   </div>
 </div>
-
+<!-- CONFETTI CANVAS -->
 <canvas id="confettiCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:80"></canvas>
 
-<script src="script.js"></script>
 <script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
+/* ============================
+   Utilities & state
+   ============================ */
+const uid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let profile = JSON.parse(localStorage.getItem('st_profile')||'null');
+let tasks = JSON.parse(localStorage.getItem('st_tasks')||'[]');
+let history = JSON.parse(localStorage.getItem('st_history')||'{}');
+let timetable = JSON.parse(localStorage.getItem('st_timetable')||'{}');
+
+/* timetable notifications memory: which slots notified today */
+let notifiedSlots = JSON.parse(localStorage.getItem('st_notifiedSlots')||'{}');
+
+/* DOM refs */
+const welcomeOverlay = document.getElementById('welcomeOverlay');
+const welcomeCard = document.getElementById('welcomeCard');
+const nameIn = document.getElementById('nameIn');
+const classIn = document.getElementById('classIn');
+const saveProfileBtn = document.getElementById('saveProfileBtn');
+const skipBtn = document.getElementById('skipBtn');
+const existingInfo = document.getElementById('existingInfo');
+const userHello = document.getElementById('userHello');
+const userClassDisplay = document.getElementById('userClassDisplay');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const taskTitle = document.getElementById('taskTitle');
+const taskHours = document.getElementById('taskHours');
+const taskMins = document.getElementById('taskMins');
+const taskSub = document.getElementById('taskSub');
+const tasksList = document.getElementById('tasksList');
+const taskSummary = document.getElementById('taskSummary');
+const miniTable = document.getElementById('miniTable');
+const todaySummary = document.getElementById('todaySummary');
+const progressChartCtx = document.getElementById('progressChart').getContext('2d');
+const quickFocusMins = document.getElementById('quickFocusMins');
+const quickStartFocus = document.getElementById('quickStartFocus');
+const openFocus = document.getElementById('openFocus');
+const themeToggle = document.getElementById('themeToggle');
+const themePack = document.getElementById('themePack');
+const autoFocusToggle = document.getElementById('autoFocusToggle');
+
+/* Focus modal refs */
+const focusModal = document.getElementById('focusModal');
+const focusTimer = document.getElementById('focusTimer');
+const focusStartBtn = document.getElementById('focusStartBtn');
+const focusPauseBtn = document.getElementById('focusPauseBtn');
+const focusCloseBtn = document.getElementById('focusCloseBtn');
+const focusTaskLabel = document.getElementById('focusTaskLabel');
+
+let dark = localStorage.getItem('st_dark')==='1';
+if(dark) document.body.classList.add('dark'), themeToggle.textContent='Light'; 
+else themeToggle.textContent='Dark';
+
+themeToggle.onclick = ()=>{
+  dark = !dark;
+  localStorage.setItem('st_dark', dark? '1':'0');
+  if(dark){
+    document.body.classList.add('dark');
+    themeToggle.textContent='Light';
+  } else {
+    document.body.classList.remove('dark');
+    themeToggle.textContent='Dark';
   }
+};
+
+/* =============================================================================
+   THEME PACKS
+   =============================================================================
+   Define multiple theme presets and function to apply them by setting CSS vars.
+*/
+const THEME_PRESETS = {
+  'default': {
+    '--bg-grad':'linear-gradient(120deg,#6a11cb,#2575fc)',
+    '--card-bg':'rgba(255,255,255,0.03)',
+    '--btn-primary-bg':'#ffffff',
+    '--btn-primary-color':'#2b3aef'
+  },
+  'neo-blue': {
+    '--bg-grad':'linear-gradient(120deg,#0ea5e9,#6366f1)',
+    '--card-bg':'rgba(255,255,255,0.02)',
+    '--btn-primary-bg':'#ffffff',
+    '--btn-primary-color':'#0ea5e9'
+  },
+  'sunset': {
+    '--bg-grad':'linear-gradient(120deg,#ff7a18,#af002d)',
+    '--card-bg':'rgba(255,255,255,0.03)',
+    '--btn-primary-bg':'#fff7ed',
+    '--btn-primary-color':'#be185d'
+  },
+  'mint': {
+    '--bg-grad':'linear-gradient(120deg,#a7f3d0,#4ade80)',
+    '--card-bg':'rgba(0,0,0,0.02)',
+    '--btn-primary-bg':'#ffffff',
+    '--btn-primary-color':'#059669'
+  },
+  'dark-pro': {
+    '--bg-grad':'linear-gradient(120deg,#020617,#071633)',
+    '--card-bg':'rgba(255,255,255,0.02)',
+    '--btn-primary-bg':'#0b1220',
+    '--btn-primary-color':'#6ee7b7'
+  }
+};
+
+function applyThemePack(key){
+  if(key==='auto'){
+    const h = new Date().getHours();
+    key = (h>=6 && h<18) ? 'default' : 'dark-pro';
+  }
+  const preset = THEME_PRESETS[key] || THEME_PRESETS['default'];
+  Object.entries(preset).forEach(([k,v])=>{
+    document.documentElement.style.setProperty(k, v);
+  });
+  localStorage.setItem('st_themePack', key);
+}
+
+const savedPack = localStorage.getItem('st_themePack') || 'default';
+themePack.value = savedPack;
+applyThemePack(savedPack);
+
+themePack.addEventListener('change', ()=> applyThemePack(themePack.value));
+
+/* =============================================================================
+   Notifications & Reminders
+   ============================================================================= */
+let notificationsAllowed = Notification && Notification.permission === 'granted';
+function requestNotifications(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default') {
+    Notification.requestPermission().then(p => {
+      notificationsAllowed = p === 'granted';
+    });
+  } else {
+    notificationsAllowed = Notification.permission === 'granted';
+  }
+}
+requestNotifications();
+
+function notify(title, body){
+  if(notificationsAllowed){
+    try{
+      new Notification(title, { body, icon: undefined });
+    }catch(e){
+      console.log('Notify failed', e);
+    }
+  } else {
+    // try requesting once
+    requestNotifications();
+  }
+}
+
+/* =============================================================================
+   Save / Load helpers
+   ============================================================================= */
+function saveAll(){
+  localStorage.setItem('st_tasks', JSON.stringify(tasks));
+  localStorage.setItem('st_history', JSON.stringify(history));
+  localStorage.setItem('st_timetable', JSON.stringify(timetable));
+  localStorage.setItem('st_notifiedSlots', JSON.stringify(notifiedSlots));
+}
+
+/* =============================================================================
+   Profile
+   ============================================================================= */
+function showWelcome(){
+  welcomeOverlay.style.display='flex';
+  setTimeout(()=> welcomeCard.classList.add('show'),50);
+}
+function hideWelcome(){
+  welcomeCard.classList.remove('show');
+  setTimeout(()=> welcomeOverlay.style.display='none',420);
+}
+
+function applyProfile(){
+  if(profile){
+    userHello.textContent = `Hello, ${profile.name}`;
+    userClassDisplay.textContent = profile.cls;
+    existingInfo.textContent = `${profile.name} — ${profile.cls}`;
+    document.getElementById('appTitle').textContent = `Study Tracker`;
+    document.getElementById('appSub').textContent = `${profile.name} • ${profile.cls}`;
+  } else {
+    userHello.textContent = 'Hello, Student';
+    userClassDisplay.textContent = 'Add your class';
+    existingInfo.textContent = 'No profile yet';
+  }
+}
+
+/* Profile buttons */
+saveProfileBtn.onclick = ()=>{
+  const n=nameIn.value.trim(), c=classIn.value.trim();
+  if(!n || !c){ alert('Name aur class dono daalo'); return; }
+  profile = { name:n, cls:c };
+  localStorage.setItem('st_profile', JSON.stringify(profile));
+  applyProfile(); hideWelcome();
+};
+skipBtn.onclick = ()=> hideWelcome();
+
+if(!profile) showWelcome(); else { applyProfile(); welcomeOverlay.style.display='none'; }
+
+/* =============================================================================
+   Task rendering & logic
+   ============================================================================= */
+function renderTasks(){
+  tasksList.innerHTML = '';
+  let totalMinStudied = 0;
+  tasks.forEach((t, idx)=>{
+    const div = document.createElement('div'); 
+    div.className='taskCard fade-in';
+    div.style.borderLeft = `6px solid ${t.color||'#9C27B0'}`;
+
+    const meta = document.createElement('div'); 
+    meta.className='taskMeta';
+    meta.innerHTML = `<div class="taskName">${escapeHtml(t.name)}</div>
+      <div class="taskSub">Subject: ${escapeHtml(t.sub||'General')} • Target: ${Math.floor(t.time/60)}h ${t.time%60}m</div>`;
+
+    const right = document.createElement('div'); 
+    right.style.textAlign='right';
+
+    const timer = document.createElement('div'); 
+    timer.className='timerDisplay'; 
+    timer.textContent = formatTime(t.timeLeft || t.time*60);
+
+    const actions = document.createElement('div'); 
+    actions.className='actionBtns';
+
+    const startBtn = document.createElement('button'); 
+    startBtn.className='btn'; 
+    startBtn.textContent = t.running ? 'Pause':'Start';
+
+    const focusBtn = document.createElement('button'); 
+    focusBtn.className='btn'; 
+    focusBtn.textContent='Focus';
+
+    const delBtn = document.createElement('button'); 
+    delBtn.className='btn'; 
+    delBtn.textContent='Delete';
+
+    const editBtn = document.createElement('button');
+    editBtn.className='btn';
+    editBtn.textContent='Edit';
+
+    actions.appendChild(startBtn); 
+    actions.appendChild(focusBtn); 
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    right.appendChild(timer); 
+    right.appendChild(actions);
+
+    div.appendChild(meta); 
+    div.appendChild(right);
+
+    // progress bar
+    const prog = document.createElement('div'); 
+    prog.className='progress';
+    const progInner = document.createElement('div'); 
+    progInner.className='progressInner';
+    const totalSec = t.time*60;
+    const doneSec = totalSec - (t.timeLeft||0);
+    const pct = totalSec ? Math.round((doneSec/totalSec)*100):0;
+    progInner.style.width = pct + '%';
+    prog.appendChild(progInner);
+    meta.appendChild(prog);
+
+    // events
+    startBtn.onclick = ()=>{
+      if(!t.timeLeft) t.timeLeft = t.time*60;
+      t.running = !t.running;
+      if(t.running) playBeep('start');
+      saveAll(); renderTasks();
+    };
+    focusBtn.onclick = ()=> openFocusModalForTask(t);
+    delBtn.onclick = ()=>{ 
+      if(confirm('Delete task?')){ tasks.splice(idx,1); saveAll(); renderTasks(); }
+    };
+    editBtn.onclick = ()=>{
+      const newName = prompt('Edit task name', t.name);
+      if(newName===null) return;
+      t.name = newName.trim() || t.name;
+      saveAll(); renderTasks();
+    };
+
+    tasksList.appendChild(div);
+    totalMinStudied += ((t.time*60 - (t.timeLeft||0)) / 60);
+  });
+
+  taskSummary.textContent = `${tasks.length} tasks • ${Math.round(totalMinStudied)} min`;
+  updateTodaySummary();
+}
+
+/* Add task */
+document.getElementById('addTaskBtn').addEventListener('click', ()=>{
+  const name = (taskTitle.value||'').trim(); 
+  if(!name){ alert('Task name dalen'); return; }
+
+  let h = parseInt(taskHours.value)||0; 
+  let m = parseInt(taskMins.value)||0; 
+  if(h < 0 || m < 0){ alert('Time cannot be negative'); return; }
+  if(h===0 && m===0){ alert('Time (hrs/min) dalen'); return; }
+
+  const total = h*60 + m;
+  const color = pickColor((taskSub.value||'General'));
+
+  const t = { 
+    id:uid(), 
+    name, 
+    time:total, 
+    timeLeft: total*60, 
+    running:false, 
+    sub: taskSub.value||'General', 
+    color
+  };
+
+  tasks.unshift(t);
+  taskTitle.value=''; taskHours.value=''; taskMins.value=''; taskSub.value='';
+
+  saveAll(); renderTasks();
+});
+
+/* format time */
+function formatTime(sec){
+  if(!sec || sec<=0) return '00:00';
+  const m = Math.floor(sec/60); 
+  const s = sec%60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+/* escape for safety when inserting text */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* global ticker for running tasks (updates every second) */
+setInterval(() => {
+  let dirty = false;
+  const todayKey = todayISO();
+
+  tasks.forEach(t => {
+    if(t.running && t.timeLeft > 0){
+      t.timeLeft--;
+      dirty = true;
+      history[todayKey] = (history[todayKey]||0) + 1;
+
+      // Sync focus timer if this task is in focus
+      if(focusTargetTask && focusTargetTask.id === t.id){
+        focusSeconds = t.timeLeft; // keep UI in sync
+        updateFocusUI();
+      }
+    }
+
+    if(t.running && t.timeLeft === 0){
+      t.running = false;
+      playBeep('end');
+      launchConfetti();
+      notify('Task complete', `${t.name} finished`);
+    }
+  });
+
+  if(dirty){
+    saveAll();
+    renderTasks();
+    updateChart();
+    updateTodaySummary();
+  }
+}, 1000);
+
+/* =============================================================================
+   Focus modal & Auto Focus Mode integration
+   ============================================================================= */
+let focusInterval=null, focusSeconds=0, focusTargetTask=null;
+let autofocusMode = false;
+
+openFocus.onclick = ()=> openFocusModal();
+document.getElementById('quickStartFocus').onclick = ()=>{ const mins = parseInt(quickFocusMins.value)||25; startFocus(mins); };
+
+function openFocusModalForTask(task){
+  focusTargetTask = task;
+  openFocusModal();
+}
+
+focusStartBtn.onclick = ()=>{
+  const mins = focusSeconds>0 ? Math.ceil(focusSeconds/60) : (parseInt(quickFocusMins.value)||25);
+  startFocus(mins);
+};
+
+focusPauseBtn.onclick = ()=>{
+  if(focusInterval) clearInterval(focusInterval), focusInterval=null;
+};
+
+focusCloseBtn.onclick = ()=> closeFocusModal();
+
+function openFocusModal(){
+  focusModal.style.display='flex';
+  focusSeconds = parseInt(quickFocusMins.value||25)*60;
+  updateFocusUI();
+  focusTaskLabel.textContent = focusTargetTask ? `Task: ${focusTargetTask.name}` : '';
+}
+
+function closeFocusModal(){
+  focusModal.style.display='none';
+  if(focusInterval) clearInterval(focusInterval);
+  focusInterval=null; 
+  focusTargetTask=null;
+  if(autofocusMode) toggleAutoFocus(false);
+}
+
+function startFocus(mins){
+  if(focusTargetTask){
+    // use remaining time of task if smaller than mins
+    focusSeconds = Math.min(focusTargetTask.timeLeft, mins*60);
+  } else {
+    focusSeconds = mins*60;
+  }
+
+  if(focusInterval) clearInterval(focusInterval);
+
+  focusInterval = setInterval(() => {
+    if(focusSeconds > 0){
+      focusSeconds--;
+      updateFocusUI();
+
+      if(focusTargetTask){
+        focusTargetTask.timeLeft = focusSeconds;
+      }
+    } else {
+      clearInterval(focusInterval);
+      focusInterval = null;
+      playBeep('end');
+      launchConfetti();
+      notify('Focus session complete!', focusTargetTask ? `You focused on "${focusTargetTask.name}"` : 'Nice work!');
+      alert('Focus session complete!');
+      saveAll();
+      renderTasks();
+      updateTodaySummary();
+    }
+  }, 1000);
+}
+
+function updateFocusUI(){
+  focusTimer.textContent = formatTime(focusSeconds);
+}
+
+/* Auto Focus: toggle full-screen minimal UI */
+function toggleAutoFocus(on){
+  autofocusMode = !!on;
+  if(on){
+    document.documentElement.classList.add('autofocus-on');
+    // hide other elements visually by reducing opacity
+    // (we keep focusModal visible)
+  } else {
+    document.documentElement.classList.remove('autofocus-on');
+  }
+}
+
+/* =============================================================================
+   Confetti, sounds (kept from original)
+   ============================================================================= */
+const confCanvas = document.getElementById('confettiCanvas');
+const confCtx = confCanvas.getContext('2d');
+function resizeConf(){ confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeConf); resizeConf();
+
+let confettiParticles = [], confettiAnimating=false;
+function launchConfetti(duration=2000){
+  confettiParticles = [];
+  const W = confCanvas.width, H = confCanvas.height;
+  for(let i=0;i<120;i++){
+    confettiParticles.push({
+      x: Math.random()*W,
+      y: Math.random()*H - H*0.2,
+      r: Math.random()*8+4,
+      dx: (Math.random()-0.5)*6,
+      dy: Math.random()*3+2,
+      rot: Math.random()*360,
+      color: `hsl(${Math.random()*360},90%,60%)`,
+      life: Math.random()*60+60
+    });
+  }
+  if(!confettiAnimating){ confettiAnimating=true; requestAnimationFrame(confettiLoop); }
+  setTimeout(()=> confettiParticles = [], duration);
+}
+function confettiLoop(){
+  confCtx.clearRect(0,0,confCanvas.width, confCanvas.height);
+  confettiParticles.forEach(p=>{
+    confCtx.save();
+    confCtx.translate(p.x,p.y);
+    confCtx.rotate(p.rot*Math.PI/180);
+    confCtx.fillStyle = p.color;
+    confCtx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+    confCtx.restore();
+    p.x += p.dx; p.y += p.dy; p.rot += 6;
+  });
+  confettiParticles = confettiParticles.filter(p=>p.y < confCanvas.height + 50);
+  if(confettiParticles.length>0) requestAnimationFrame(confettiLoop);
+  else confettiAnimating=false;
+}
+
+/* Sounds */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioCtx();
+function playBeep(type){
+  const now = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  if(type==='start'){
+    o.frequency.setValueAtTime(330, now);
+    o.frequency.linearRampToValueAtTime(660, now + 0.12);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.3, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+  } else {
+    o.frequency.setValueAtTime(660, now);
+    o.frequency.exponentialRampToValueAtTime(220, now + 0.18);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+  }
+  o.start(now); o.stop(now + 0.35);
+}
+
+/* =============================================================================
+   Chart - improved animation & smoothing
+   ============================================================================= */
+let chart = null;
+function initChart(){
+  const labels = lastNDates(7).map(d => d.slice(5));
+  const data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
+  chart = new Chart(progressChartCtx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Minutes studied',
+        data,
+        fill: true,
+        tension: 0.35,
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        borderColor: 'rgba(255,255,255,0.95)',
+        pointRadius: 4
+      }]
+    },
+ options: {
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: { color: 'rgba(255,255,255,0.9)' },
+      grid: { color: 'rgba(255,255,255,0.1)' }
+    },
+    x: {
+      ticks: { color: 'rgba(255,255,255,0.9)' },
+      grid: { color: 'rgba(255,255,255,0.05)' }
+    }
+  },
+  plugins: { 
+    legend: { display: false } 
+  }
+}
+
+  });
+}
+function updateChart(){
+  if(!chart) initChart();
+  const labels = lastNDates(7).map(d => d.slice(5));
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
+  chart.update();
+}
+function lastNDates(n){
+  const arr = [];
+  for(let i = n-1; i >= 0; i--){
+    const dt = new Date(); dt.setDate(dt.getDate() - i);
+    arr.push(dt.toISOString().slice(0,10));
+  }
+  return arr;
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
+/* =============================================================================
+   Timetable with reminders
+   ============================================================================= */
+function renderMiniTable(){
+  miniTable.innerHTML = '';
+  const times = ['08:00','10:00','12:00','14:00'];
+  times.forEach(t=>{
+    const div = document.createElement('div');
+    div.className = 'timetable-item';
+    div.textContent = timetable[t] || t;
+    div.onclick = ()=>{
+      const v = prompt(`Enter subject for ${t}`, timetable[t]||'');
+      if(v === null) return;
+      if(v.trim() === '') delete timetable[t]; else timetable[t] = v;
+      saveAll(); renderMiniTable();
+    };
+    miniTable.appendChild(div);
+  });
+}
+
+/* check timetable and notify when time matches (runs every minute) */
+function checkTimetableReminders(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const key = `${hh}:${mm}`;
+  const today = todayISO();
+  notifiedSlots[today] = notifiedSlots[today] || {};
+  if(timetable[key] && !notifiedSlots[today][key]){
+    // notify user
+    notify('Timetable reminder', `Time for ${timetable[key]} (${key})`);
+    notifiedSlots[today][key] = true;
+    saveAll();
+  }
+}
+/* reset notifiedSlots each day */
+setInterval(()=>{
+  const today = todayISO();
+  if(!notifiedSlots[today]){
+    // clear old keys (simple approach)
+    Object.keys(notifiedSlots).forEach(k=>{ if(k !== today) delete notifiedSlots[k]; });
+    saveAll();
+  }
+}, 1000*60*30);
+setInterval(checkTimetableReminders, 1000*60); // every minute
+
+/* =============================================================================
+   Utility UI features: pick color, updateTodaySummary, init
+   ============================================================================= */
+function pickColor(sub){
+  const map = {
+    Math: '#F43F5E',
+    Physics: '#60A5FA',
+    Chemistry: '#FB923C',
+    Biology: '#34D399',
+    General: '#6366F1'
+  };
+  return map[sub] || '#9C27B0';
+}
+
+function updateTodaySummary(){
+  const today = todayISO();
+  const mins = Math.round((history[today]||0)/60);
+  todaySummary.textContent = mins ? `${mins} min studied today` : 'No study yet today';
+}
+/* =============================================================================
+   Tiny helpers + init
+   ============================================================================= */
+function init(){
+  tasks = JSON.parse(localStorage.getItem('st_tasks')||'[]');
+  history = JSON.parse(localStorage.getItem('st_history')||'{}');
+  timetable = JSON.parse(localStorage.getItem('st_timetable')||'{}');
+  notifiedSlots = JSON.parse(localStorage.getItem('st_notifiedSlots')||'{}');
+  if(profile) applyProfile();
+  renderTasks(); renderMiniTable(); initChart(); updateChart(); updateTodaySummary();
+}
+init();
+
+/* Edit profile button */
+document.getElementById('editProfileBtn').onclick = ()=>{
+  const n = prompt('Name', profile? profile.name : '');
+  const c = prompt('Class / Exam', profile? profile.cls : '');
+  if(n && c){ profile = { name:n, cls:c }; localStorage.setItem('st_profile', JSON.stringify(profile)); applyProfile(); }
+};
+
+/* Quick save on unload */
+window.addEventListener('beforeunload', ()=> saveAll());
+
+/* ------------------- PWA: Service Worker ------------------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('worker.js')
+      .then(reg => console.log('Service Worker registered:', reg.scope))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+// Listen for install prompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); // Prevent automatic prompt
+  deferredPrompt = e;
+  installBtn.style.display = 'inline-flex'; // Show the button
+});
+
+// When user clicks the button
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt(); // Show install prompt
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === 'accepted') {
+    console.log('User accepted the PWA installation');
+  } else {
+    console.log('User dismissed the PWA installation');
+  }
+  deferredPrompt = null;
+  installBtn.style.display = 'none'; // Hide the button
+});
 </script>
 
 </body>
