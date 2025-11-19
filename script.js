@@ -1,28 +1,6 @@
-// --------------------------------------------
-// INSTALL BUTTON (PWA INSTALL PROMPT)
-// --------------------------------------------
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = "block"; // Show button
-});
-
-installBtn.addEventListener("click", async () => {
-  installBtn.style.display = "none";
-  deferredPrompt.prompt();
-  const result = await deferredPrompt.userChoice;
-  if (result.outcome === "accepted") {
-    console.log("App Installed");
-  }
-  deferredPrompt = null;
-});
-
-// --------------------------------------------
+// --------------------------
 // THEME TOGGLE
-// --------------------------------------------
+// --------------------------
 const themeBtn = document.getElementById("themeToggle");
 let isDark = true;
 
@@ -41,9 +19,10 @@ themeBtn.addEventListener("click", () => {
   }
 });
 
-// --------------------------------------------
+
+// --------------------------
 // PROFILE SYSTEM
-// --------------------------------------------
+// --------------------------
 const welcomeOverlay = document.getElementById("welcomeOverlay");
 const nameIn = document.getElementById("nameIn");
 const classIn = document.getElementById("classIn");
@@ -62,9 +41,9 @@ function loadProfile() {
     userHello.textContent = "Hello, " + nm;
     userClassDisplay.textContent = cls || "Class / Exam";
     existingInfo.textContent = nm + " • " + cls;
-    welcomeOverlay.style.display = "none";
+    welcomeOverlay.classList.add("hidden");
   } else {
-    welcomeOverlay.style.display = "flex";
+    welcomeOverlay.classList.remove("hidden");
   }
 }
 loadProfile();
@@ -76,12 +55,13 @@ saveProfileBtn.addEventListener("click", () => {
 });
 
 skipBtn.addEventListener("click", () => {
-  welcomeOverlay.style.display = "none";
+  welcomeOverlay.classList.add("hidden");
 });
 
-// --------------------------------------------
+
+// --------------------------
 // TASK SYSTEM
-// --------------------------------------------
+// --------------------------
 const taskTitle = document.getElementById("taskTitle");
 const taskHours = document.getElementById("taskHours");
 const taskMins = document.getElementById("taskMins");
@@ -131,8 +111,8 @@ renderTasks();
 addTaskBtn.addEventListener("click", () => {
   if (!taskTitle.value.trim()) return;
 
-  const mins = (parseInt(taskHours.value || 0) * 60) +
-               (parseInt(taskMins.value || 0));
+  const mins =
+    (parseInt(taskHours.value || 0) * 60) + (parseInt(taskMins.value || 0));
 
   tasks.push({
     title: taskTitle.value,
@@ -148,9 +128,10 @@ addTaskBtn.addEventListener("click", () => {
   renderTasks();
 });
 
-// --------------------------------------------
-// MINI TIMETABLE
-// --------------------------------------------
+
+// --------------------------
+// MINI TIMETABLE GRID
+// --------------------------
 const miniTable = document.getElementById("miniTable");
 
 for (let i = 6; i <= 21; i++) {
@@ -170,9 +151,10 @@ for (let i = 6; i <= 21; i++) {
   miniTable.appendChild(slot);
 }
 
-// --------------------------------------------
+
+// --------------------------
 // PROGRESS CHART
-// --------------------------------------------
+// --------------------------
 const ctx = document.getElementById("progressChart");
 
 new Chart(ctx, {
@@ -187,9 +169,10 @@ new Chart(ctx, {
   }
 });
 
-// --------------------------------------------
-// FOCUS / POMODORO + NOTIFICATION
-// --------------------------------------------
+
+// --------------------------
+// FOCUS / POMODORO — FIXED
+// --------------------------
 const openFocus = document.getElementById("openFocus");
 const focusModal = document.getElementById("focusModal");
 const focusTimer = document.getElementById("focusTimer");
@@ -209,8 +192,8 @@ openFocus.addEventListener("click", () => {
 focusCloseBtn.addEventListener("click", () => {
   focusModal.classList.add("hidden");
   clearInterval(focusInterval);
-  focusTimer.textContent = "25:00";
   timeLeft = 25 * 60;
+  focusTimer.textContent = "25:00";
 });
 
 focusStartBtn.addEventListener("click", startFocus);
@@ -233,8 +216,7 @@ function startFocus() {
 
     if (timeLeft <= 0) {
       clearInterval(focusInterval);
-      alert("🎉 Focus Session Complete!");
+      alert("Focus session complete!");
     }
   }, 1000);
 }
-

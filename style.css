@@ -1,210 +1,143 @@
+/* ------------------------------
+   GLOBAL VARIABLES
+------------------------------ */
 :root {
   --bg: #0d0f14;
   --bg-2: #11131a;
-  --border: rgba(255, 255, 255, 0.08);
   --text: #ffffff;
-  --text-soft: rgba(255, 255, 255, 0.6);
-  --accent: #2575fc;
-  --accent-2: #40c4ff;
+  --border: #2a2d35;
+  --primary: #2575fc;
+  --card: #161922;
+  --radius: 14px;
 }
 
-/* GLOBAL */
+/* ------------------------------
+   GLOBAL STYLES
+------------------------------ */
 body {
   margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
   background: var(--bg);
   color: var(--text);
-  font-family: "Poppins", sans-serif;
-  height: 100vh;
-  overflow: hidden;
 }
 
-.container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* THIS FIXES YOUR MODAL CLOSE ISSUE */
+.hidden {
+  display: none !important;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  width: 48px;
-  height: 48px;
-  background: var(--accent);
-  color: white;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.title {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.subtitle {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-/* GRID LAYOUT */
-.grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 20px;
-  overflow: auto;
-}
-
-/* SECTIONS */
-.section,
-.widget,
-.taskItem,
-.focusCard,
-.welcomeCard {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-
-.section,
-.widget {
-  padding: 16px;
-}
-
-/* BUTTONS */
-.btn,
-.addBtn {
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
+/* ------------------------------
+   BUTTONS
+------------------------------ */
 .btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+  background: var(--primary);
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  opacity: 0.9;
 }
 
-.btn.primary,
-.addBtn {
-  background: var(--accent);
-  border: none;
-  color: #fff;
+/* ------------------------------
+   CARDS
+------------------------------ */
+.card {
+  background: var(--card);
+  padding: 16px;
+  border-radius: var(--radius);
+  margin: 12px 0;
+  border: 1px solid var(--border);
 }
 
-/* TASK LIST ITEM */
-.taskItem {
-  margin-bottom: 8px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* WELCOME OVERLAY */
-#welcomeOverlay {
-  position: fixed;
-  inset: 0;
-  background: #0008;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-  z-index: 50;
-}
-
-.welcomeCard {
-  width: 800px;
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.input {
+/* ------------------------------
+   INPUTS
+------------------------------ */
+input,
+select {
   width: 100%;
   padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  background: transparent;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
+  background: var(--bg-2);
   color: var(--text);
 }
 
-/* RIGHT PANEL */
-.chartWrap {
-  height: 180px;
+/* ------------------------------
+   TASK ITEMS
+------------------------------ */
+.taskItem {
+  background: var(--bg-2);
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* FOCUS MODAL */
-#focusModal {
+/* ------------------------------
+   WELCOME OVERLAY
+------------------------------ */
+#welcomeOverlay {
   position: fixed;
   inset: 0;
-  background: #0007;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
-  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.focusCard {
-  padding: 20px;
-  width: 350px;
+#welcomeOverlay .box {
+  background: var(--card);
+  padding: 25px;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 350px;
+}
+
+/* ------------------------------
+   FOCUS MODAL
+------------------------------ */
+#focusModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#focusModal .box {
+  width: 90%;
+  max-width: 350px;
+  background: var(--card);
+  padding: 25px;
+  border-radius: var(--radius);
   text-align: center;
 }
 
-.focusTime {
-  font-size: 48px;
-  font-weight: 800;
-  margin: 20px 0;
+#focusTimer {
+  font-size: 42px;
+  margin: 15px 0;
 }
 
-/* HIDDEN CLASS */
-.hidden {
-  display: none;
-}
-
-/* FOOTER */
-.powered {
-  text-align: center;
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .welcomeCard {
-    grid-template-columns: 1fr;
-    width: 90%;
-  }
+/* ------------------------------
+   MINI TIMETABLE
+------------------------------ */
+#miniTable {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
