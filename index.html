@@ -152,8 +152,7 @@ body.dark .logo{box-shadow:none}
         <button class="btn" id="themeToggle">Dark</button>
       </div>
       <button class="btn" id="openFocus">Focus</button>
-<button class="btn primary" id="installBtn" style="display:none;">Download App</button>
- </div>
+    </div>
   </div>
 
   <!-- GRID -->
@@ -954,29 +953,6 @@ if('serviceWorker' in navigator){
       .catch(err => console.log('SW registration failed:', err));
   });
 }
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-// Listen for install prompt event
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); // Prevent automatic prompt
-  deferredPrompt = e;
-  installBtn.style.display = 'inline-flex'; // Show the button
-});
-
-// When user clicks the button
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt(); // Show install prompt
-  const { outcome } = await deferredPrompt.userChoice;
-  if (outcome === 'accepted') {
-    console.log('User accepted the PWA installation');
-  } else {
-    console.log('User dismissed the PWA installation');
-  }
-  deferredPrompt = null;
-  installBtn.style.display = 'none'; // Hide the button
-});
 </script>
 
 </body>
