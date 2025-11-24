@@ -276,8 +276,46 @@ function stopPom(){ if(pomInterval) clearInterval(pomInterval); pomInterval=null
 pomStart.onclick = ()=> startPom(); pomPause.onclick = ()=> pausePom(); pomStop.onclick = ()=> stopPom();
 
 /* -------------------- Chart -------------------- */
-let chart=null; function initChart(){ const labels = lastNDates(7).map(d=>d.slice(5)); const data = lastNDates(7).map(d=>Math.round((history[d]||0)/60)); chart = new Chart(weeklyChartCtx, { type:'line', data:{ labels, datasets:[{label:'Minutes', data, fill:true, tension:0.35, backgroundColor:'rgba(255,255,255,0.06)', borderColor:'rgba(255,255,255,0.95)', pointRadius:4}]}, options:{scales:{y:{beginAtZero:true,ticks:{color:'rgba(255,255,255,0.9)'}},x:{ticks:{color:'rgba(255,255,255,0.9)'}}},plugins:{legend:{display:false}} } }); }
-function updateChart(){ if(!chart) initChart(); const labels = lastNDates(7).map(d=>d.slice(5)); chart.data.labels = labels; chart.data.datasets[0].data = lastNDates(7).map(d=>Math.round((history[d]||0)/60)); chart.update(); }
+let chart = null;
+
+function initChart(){
+  if(chart) chart.destroy(); // destroy previous chart if exists
+  const labels = lastNDates(7).map(d => d.slice(5));
+  const data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
+  
+  chart = new Chart(weeklyChartCtx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Minutes',
+        data,
+        fill: true,
+        tension: 0.35,
+        backgroundColor: 'rgba(255,255,255,0.06)',
+        borderColor: 'rgba(255,255,255,0.95)',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.9)' } },
+        x: { ticks: { color: 'rgba(255,255,255,0.9)' } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function updateChart(){
+  if(!chart) initChart();
+  const labels = lastNDates(7).map(d => d.slice(5));
+  const data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
+  
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = data;
+  chart.update();
+}
 function lastNDates(n){ const arr=[]; for(let i=n-1;i>=0;i--){ const dt=new Date(); dt.setDate(dt.getDate()-i); arr.push(dt.toISOString().slice(0,10)); } return arr; }
 
 /* -------------------- Stats -------------------- */
