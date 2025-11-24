@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Study Tracker — Upgraded</title>
-<link rel="manifest" href="#manifest">
+<link rel="manifest" href="/manifest.json">
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <!-- Google AdSense loader -->
@@ -323,10 +323,12 @@ renderAll();
 
 /* -------------------- Import initial demo if empty -------------------- */
 if(!tasks.length && !Object.keys(history).length){ const demoTask={id:uid(),name:'Revision: Algebra',sub:'Math',time:60,timeLeft:60*60,running:false,color:pickColor('Math')}; tasks.push(demoTask); history[todayISO()]=60*60; saveAll(); renderAll(); }
-
-/* -------------------- Service Worker (inline blob) -------------------- */
-if('serviceWorker' in navigator){ const swCode = `self.addEventListener('install', e=>{ self.skipWaiting(); e.waitUntil(caches.open('st-cache-v1').then(c=> c.addAll(['/','/index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js']).catch(()=>{}))); }); self.addEventListener('activate', e=>{ clients.claim(); }); self.addEventListener('fetch', e=>{ e.respondWith(caches.match(e.request).then(res=> res || fetch(e.request).then(r=>{ const c = r.clone(); caches.open('st-cache-v1').then(cache=> cache.put(e.request, c)); return r; }).catch(()=>{})) ); });`; const blob = new Blob([swCode], {type:'text/javascript'}); const swUrl = URL.createObjectURL(blob); navigator.serviceWorker.register(swUrl).then(()=>console.log('SW registered (blob)')).catch(e=>console.log('SW fail',e)); }
-
+/* -------------------- Service Worker registration -------------------- */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(() => console.log('Service Worker registered'))
+    .catch(e => console.log('SW registration failed', e));
+}
 /* -------------------- Utility: start focus on a selected task -------------------- */
 function startFocusOnTaskById(id){ const t=tasks.find(x=>x.id===id); if(t){ startFocusOnTask(t); } }
 

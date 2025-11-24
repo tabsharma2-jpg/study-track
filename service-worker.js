@@ -7,7 +7,7 @@ const STATIC_ASSETS = [
   "./icons/icon-512.png"
 ];
 
-// Install event
+// Install
 self.addEventListener("install", (e) => {
   e.waitUntil(
     (async () => {
@@ -15,9 +15,9 @@ self.addEventListener("install", (e) => {
       console.log("Caching static assets...");
       await cache.addAll(STATIC_ASSETS);
 
-      // Try caching CDN (optional)
+      // Cache CDN
       try {
-        await cache.add("https://cdn.jsdelivr.net/npm/chart.js");
+        await cache.add("https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js");
       } catch (err) {
         console.warn("Failed to cache CDN file:", err);
       }
@@ -26,7 +26,7 @@ self.addEventListener("install", (e) => {
   self.skipWaiting();
 });
 
-// Activate event
+// Activate
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
@@ -36,15 +36,15 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// Fetch event
+// Fetch
 self.addEventListener("fetch", (e) => {
   if (e.request.mode === "navigate") {
-    // network → fallback index.html
     e.respondWith(
       fetch(e.request).catch(() => caches.match("./index.html"))
     );
   } else {
-    // cache → network
     e.respondWith(
-      caches.matc
-
+      caches.match(e.request).then((cached) => cached || fetch(e.request))
+    );
+  }
+});
