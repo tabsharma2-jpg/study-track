@@ -55,6 +55,16 @@ body{background:var(--bg);display:flex;align-items:center;justify-content:center
 .toggle{display:inline-flex;align-items:center;gap:8px}
 /* responsive */
 @media (max-width:980px){.layout{grid-template-columns:1fr}.charts{grid-template-columns:1fr}.right{order:2}}
+/* ---------- Mobile / Tablet Fix ---------- */
+@media (max-width: 979px) {
+  body {
+    display: block !important; /* flex हटाया, vertical scroll आएगा */
+    padding: 10px; /* ऊपर/नीचे padding adjust */
+  }
+  .app {
+    min-height: auto !important; /* अब content पूरी height लेगा */
+  }
+}
 </style>
 </head>
 <body>
