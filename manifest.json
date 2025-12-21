@@ -1,11 +1,11 @@
 {
-  "name": "Study Tracker",
+  "name": "Study Tracker Pro",
   "short_name": "StudyTrack",
-  "start_url": "./",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#2575fc",
-  "theme_color": "#2575fc",
-  "description": "A simple study planner, tracker and focus app.",
+  "background_color": "#0f1724",
+  "theme_color": "#0ea5e9",
+  "description": "Plan · Focus · Finish — Powered by Abhi",
   "icons": [
     {
       "src": "icons/icon-192.png",

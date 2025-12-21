@@ -2,400 +2,631 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Study Tracker — Upgraded</title>
- <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="manifest" href="/manifest.json">
-<!-- Chart.js -->
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Study Tracker — World Class</title>
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- Google AdSense loader -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5520401672645952"
-     crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5520401672645952" crossorigin="anonymous"></script>
+
 <style>
-:root{
-  --bg: linear-gradient(120deg,#0f1724,#071633);
-  --card: rgba(255,255,255,0.04);
-  --glass: rgba(255,255,255,0.06);
-  --accent: #fff;
-  --muted: rgba(255,255,255,0.75);
-  --primary: #7c3aed;
-  --success: #10b981;
+/* --- World Class Glassmorphism CSS --- */
+:root {
+  --bg-gradient: linear-gradient(135deg, #0f1724 0%, #071633 100%);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --backdrop: blur(12px);
+  --accent: #38bdf8; /* Sky Blue */
+  --accent-grad: linear-gradient(90deg, #38bdf8, #818cf8);
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
   --danger: #ef4444;
-  --rounded: 14px;
+  --success: #10b981;
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:var(--accent)}
-body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:18px}
-.app{width:100%;max-width:1100px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:18px;padding:18px;backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(2,6,23,0.6);min-height:80vh;display:flex;flex-direction:column;gap:12px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px}
-.title{font-weight:700}
-.controls{display:flex;gap:8px;align-items:center}
-.btn{padding:8px 12px;border-radius:10px;border:none;background:rgba(255,255,255,0.06);color:var(--accent);cursor:pointer}
-.btn.primary{background:var(--primary);color:white;font-weight:700}
-.layout{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:8px;flex:1;overflow:hidden}
-.left{overflow:auto;padding-right:8px}
-.right{overflow:auto;padding-left:8px}
-.card{background:var(--card);padding:14px;border-radius:var(--rounded);box-shadow:0 8px 30px rgba(2,6,23,0.4)}
-.section-title{display:flex;justify-content:space-between;align-items:center}
-.task-form{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.input,select{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--accent)}
-.addBtn{background:linear-gradient(90deg,#fff,#e6e6e6);color:#1f2937;padding:10px 14px;border-radius:10px;border:none}
-.task-list{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.task-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(120deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));border-left:6px solid var(--primary)}
-.small{font-size:13px;color:var(--muted)}
-.timer-big{font-size:36px;font-weight:800;text-align:center}
-.flex{display:flex;gap:8px}
-.progress{height:8px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
-.progress > i{display:block;height:100%;background:linear-gradient(90deg,#7c3aed,#2563eb);width:0}
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:13px;color:var(--muted)}
-.toggle{display:inline-flex;align-items:center;gap:8px}
-/* responsive */
-@media (max-width:980px){.layout{grid-template-columns:1fr}.charts{grid-template-columns:1fr}.right{order:2}}
-/* ---------- Mobile / Tablet Fix ---------- */
-@media (max-width: 979px) {
-  body {
-    display: block !important; /* flex हटाया, vertical scroll आएगा */
-    padding: 10px; /* ऊपर/नीचे padding adjust */
-  }
-  .app {
-    min-height: auto !important; /* अब content पूरी height लेगा */
-  }
+
+/* Themes */
+body.theme-sunset { --bg-gradient: linear-gradient(135deg, #4c1d95, #be185d); --accent: #fbbf24; --accent-grad: linear-gradient(90deg, #fbbf24, #f59e0b); }
+body.theme-mint { --bg-gradient: linear-gradient(135deg, #064e3b, #065f46); --accent: #34d399; --accent-grad: linear-gradient(90deg, #34d399, #10b981); }
+
+* { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+/* Layout */
+.app-container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 100vh; overflow: hidden; }
+
+/* Glass Components */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--backdrop);
+  -webkit-backdrop-filter: var(--backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 20px; height: 100%; }
+.brand { font-size: 24px; font-weight: 800; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+.nav-item { padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.3s; color: var(--text-muted); display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: var(--text); border-left: 4px solid var(--accent); }
+.community-widget { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 78, 59, 0.2)); padding: 15px; border-radius: 15px; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 13px; animation: pulse 3s infinite; }
+@keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);} 70% {box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);} 100% {box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);} }
+
+/* Main Content */
+.main-content { display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto; }
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; }
+.greeting h1 { margin: 0; font-size: 28px; }
+.greeting p { margin: 5px 0 0; color: var(--text-muted); font-size: 14px; }
+
+/* Cards & Stats */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+.stat-card { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+.stat-val { font-size: 28px; font-weight: 800; margin-top: 5px; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Buttons & Inputs */
+.btn { border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: var(--font-main); }
+.btn-primary { background: var(--accent-grad); color: #000; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4); }
+.btn-ghost { background: rgba(255,255,255,0.1); color: white; }
+.input { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; margin-bottom: 10px; font-family: var(--font-main); }
+.input:focus { border-color: var(--accent); }
+
+/* Task List */
+.task-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.03); border-radius: 12px; border-left: 4px solid var(--accent); transition: 0.2s; }
+.task-item:hover { transform: translateX(5px); background: rgba(255,255,255,0.06); }
+.task-actions { display: flex; gap: 8px; }
+
+/* Focus Mode Overlay */
+#focusOverlay { position: fixed; inset: 0; background: var(--bg-gradient); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+#focusOverlay.active { transform: translateY(0); }
+.timer-huge { font-size: 120px; font-weight: 900; font-variant-numeric: tabular-nums; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Onboarding Modal */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+.hidden { display: none !important; }
+
+/* Footer */
+.footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-muted); padding: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+.footer span { color: var(--accent); font-weight: bold; }
+
+/* Confetti Canvas */
+#confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3000; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .app-container { grid-template-columns: 1fr; height: auto; overflow: visible; padding: 10px; }
+  .sidebar { display: none; } /* Hide sidebar on mobile, use bottom nav or simple stack */
+  .mobile-nav { display: flex; } /* To implement if needed */
+  .glass-panel { max-height: none; }
+  .timer-huge { font-size: 80px; }
 }
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <div class="header">
-    <div class="brand">
-      <div class="logo">ST</div>
-      <div>
-        <div class="title">Study Tracker — Upgraded</div>
-        <div class="small">Plan • Focus • Finish</div>
-      </div>
-    </div>
-    <div class="controls">
-      <select id="themePack" class="input" title="Theme packs">
-        <option value="default">Default</option>
-        <option value="neo-blue">Neo Blue</option>
-        <option value="sunset">Sunset</option>
-        <option value="mint">Mint</option>
-        <option value="dark-pro">Dark Pro</option>
-        <option value="auto">Auto</option>
-      </select>
-      <div class="toggle small" id="darkToggle">Dark</div>
-      <button class="btn" id="importBtn" title="Import JSON">Import</button>
-      <button class="btn" id="exportBtn">Export</button>
-      <button class="btn primary" id="addTaskBtnTop">New Task</button>
-    </div>
-  </div>
 
-  <div class="layout">
-    <div class="left">
-      <div class="card">
-        <div class="section-title"><h3 style="margin:0">Profile</h3><div class="small" id="profileActions"></div></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-          <div>
-            <div id="userHello" style="font-weight:800">Hello, Student</div>
-            <div class="small" id="userClass">Add your class</div>
-          </div>
-          <div>
-            <button class="btn" id="editProfile">Edit</button>
-          </div>
-        </div>
-      </div>
+<canvas id="confetti-canvas"></canvas>
 
-      <div class="card" style="margin-top:12px">
-        <div class="section-title"><h3 style="margin:0">Tasks</h3><div class="small" id="taskSummary">0 tasks • 0 min</div></div>
-        <div class="task-form" style="margin-top:8px">
-          <input id="taskName" class="input" placeholder="Task / Topic">
-          <input id="taskHours" class="input" type="number" min="0" placeholder="hrs" style="width:100px">
-          <input id="taskMins" class="input" type="number" min="0" placeholder="mins" style="width:100px">
-          <select id="taskSub" class="input" style="min-width:120px"><option>General</option><option>Math</option><option>Physics</option><option>Chemistry</option><option>Biology</option></select>
-          <button class="addBtn" id="addTask">Add</button>
-        </div>
-
-        <div class="task-list" id="tasksList"></div>
-
-      </div>
-
-      <div class="card" style="margin-top:12px">
-        <div class="section-title"><h3 style="margin:0">Pomodoro / Focus</h3><div class="small">Auto-logging enabled</div></div>
-        <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
-          <input id="pomMinutes" type="number" class="input" value="25" style="width:90px">
-          <button class="btn primary" id="pomStart">Start</button>
-          <button class="btn" id="pomPause">Pause</button>
-          <button class="btn" id="pomStop">Stop</button>
-        </div>
-        <div style="margin-top:12px;text-align:center">
-          <div class="timer-big" id="pomTimer">25:00</div>
-          <div class="small">Current Task: <span id="pomTask">—</span></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="right">
-      <div class="card">
-        <div class="section-title"><h3 style="margin:0">Stats</h3><div class="small">Last 7 days</div></div>
-        <div style="margin-top:12px">
-          <canvas id="weeklyChart" height="120"></canvas>
-        </div>
-        <div class="charts" style="margin-top:12px">
-          <div class="card" style="padding:10px">
-            <div class="small">Today</div>
-            <div style="font-weight:800;font-size:20px;margin-top:6px" id="todayStat">0 min</div>
-            <div class="small" style="margin-top:8px" id="todayTasks">0 tasks</div>
-          </div>
-          <div class="card" style="padding:10px">
-            <div class="small">Streak</div>
-            <div style="font-weight:800;font-size:20px;margin-top:6px" id="streak">0 days</div>
-            <div class="small" style="margin-top:8px" id="goalProgress">Goal: 0/0 min</div>
-          </div>
-        </div>
-      </div>
-<!-- Google AdSense Display Ad -->
-<ins class="adsbygoogle"
-     style="display:block; text-align:center; margin-top:12px;"
-     data-ad-client="ca-pub-5520401672645952"
-     data-ad-slot="9987937168"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-      <div class="card" style="margin-top:12px">
-        <div class="section-title"><h3 style="margin:0">Quick Actions</h3><div class="small">Export, reminders, cache</div></div>
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn" id="exportCSV">Export CSV</button>
-          <button class="btn" id="clearData">Clear</button>
-          <button class="btn" id="enableNotif">Enable Notifications</button>
-        </div>
-        <div style="margin-top:12px" class="small">Reminders:</div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input id="remTime" type="time" class="input" style="width:130px">
-          <button class="btn" id="addReminder">Add</button>
-        </div>
-        <div id="remList" style="margin-top:10px" class="small"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="footer">
-    <div>POWERED BY ABHI SARSWAT — Upgraded • Offline-ready</div>
-    <div class="small">Version 2.0</div>
+<div id="onboardingModal" class="modal hidden">
+  <div class="glass-panel" style="max-width: 400px; text-align: center;">
+    <h2>🚀 Welcome to Study Tracker</h2>
+    <p>Let's personalize your experience.</p>
+    <input id="obName" class="input" placeholder="Your Name (e.g., Abhinav)">
+    <input id="obClass" class="input" placeholder="Class / Exam (e.g., NEET)">
+    <input id="obGoal" type="number" class="input" placeholder="Daily Goal (Hours)">
+    <button class="btn btn-primary" style="width: 100%;" onclick="completeOnboarding()">Start Journey</button>
   </div>
 </div>
 
+<div id="focusOverlay">
+  <div style="font-size: 20px; letter-spacing: 2px; text-transform: uppercase;">Deep Focus Mode</div>
+  <div class="timer-huge" id="focusTimerDisplay">25:00</div>
+  <div style="margin-bottom: 30px; color: var(--text-muted);" id="focusTaskName">Studying...</div>
+  <div style="display: flex; gap: 20px;">
+    <button class="btn btn-ghost" onclick="toggleTimer()">Pause/Resume</button>
+    <button class="btn btn-primary" onclick="exitFocus()">Give Up</button>
+  </div>
+  <div style="margin-top: 40px; font-size: 14px; opacity: 0.7;">
+    "The pain of discipline is far less than the pain of regret."
+  </div>
+</div>
+
+<div class="app-container">
+  <aside class="sidebar glass-panel">
+    <div class="brand">STUDY TRACK</div>
+    <nav style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+      <div class="nav-item" onclick="showSection('planner')">🤖 AI Planner</div>
+      <div class="nav-item" onclick="showSection('notes')">📝 Scratchpad</div>
+      <div class="nav-item" onclick="showSection('settings')">⚙️ Settings</div>
+    </nav>
+    
+    <div style="margin-top: auto;">
+      <div class="community-widget">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
+          <div style="width:8px; height:8px; background:#10b981; border-radius:50%;"></div>
+          <strong style="color:#10b981">LIVE NOW</strong>
+        </div>
+        <span id="liveUsers">1,240</span> students are studying right now. Keep going!
+      </div>
+      <br>
+      <button class="btn btn-primary" id="installBtn" style="width:100%; display:none;">📲 Install App</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <div style="width:100%; min-height:90px; text-align:center; background:rgba(0,0,0,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+       <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-5520401672645952"
+         data-ad-slot="1234567890" 
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+       <span style="font-size:10px; color:gray;">Sponsored Ad Space</span>
+    </div>
+
+    <div id="section-dashboard">
+      <div class="header">
+        <div class="greeting">
+          <h1 id="userGreet">Hello, Student</h1>
+          <p id="dateDisplay">Let's crush your goals today!</p>
+        </div>
+        <div class="glass-panel" style="padding: 8px 15px;">
+          🔥 <span id="streakDisplay">0</span> Day Streak
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Studied Today</div>
+          <div class="stat-val" id="todayTime">0h 0m</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tasks Done</div>
+          <div class="stat-val" id="doneCount">0/0</div>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));">
+          <div class="stat-label">Weekly Focus</div>
+          <div style="height: 100px; margin-top: 10px;">
+            <canvas id="weeklyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="margin-top: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <h3>✅ Tasks Checklist</h3>
+          <button class="btn btn-ghost" style="font-size:12px;" onclick="toggleTaskForm()">+ New Task</button>
+        </div>
+        
+        <div id="addTaskForm" style="display:none; margin-bottom:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;">
+          <input id="newTaskName" class="input" placeholder="Task Name (e.g., Physics Chapter 1)">
+          <div style="display:flex; gap:10px;">
+            <input id="newTaskTime" type="number" class="input" placeholder="Mins">
+            <button class="btn btn-primary" onclick="addTask()">Add</button>
+          </div>
+        </div>
+
+        <div id="taskListContainer">
+          </div>
+        
+        <div style="margin-top:20px; text-align:center;">
+             <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client="ca-pub-5520401672645952"
+             data-ad-slot="9876543210"></ins>
+             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+      </div>
+    </div>
+
+    <div id="section-planner" class="hidden">
+      <div class="glass-panel">
+        <h2>🤖 AI Syllabus Planner</h2>
+        <p style="color:var(--text-muted); margin-bottom:15px;">Enter your syllabus chapters and exam date. The AI will distribute them for you.</p>
+        
+        <textarea id="aiSyllabus" class="input" rows="5" placeholder="Enter chapters separated by commas (e.g. Mechanics, Thermodynamics, Optics, Algebra, Calculus)"></textarea>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <input type="date" id="aiDate" class="input">
+          <button class="btn btn-primary" onclick="generatePlan()">Generate Plan</button>
+        </div>
+        
+        <div id="aiResult" style="margin-top:20px;"></div>
+      </div>
+    </div>
+
+    <div id="section-notes" class="hidden">
+      <div class="glass-panel" style="height:100%; display:flex; flex-direction:column;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+          <h2>📝 Scratchpad</h2>
+          <button class="btn btn-ghost" onclick="downloadNotes()">Download .txt</button>
+        </div>
+        <textarea id="scratchpad" class="input" style="flex:1; resize:none; font-family:monospace;" placeholder="Type your quick notes here... (Auto-saved)"></textarea>
+      </div>
+    </div>
+
+    <div id="section-settings" class="hidden">
+      <div class="glass-panel">
+        <h2>⚙️ Settings</h2>
+        <div style="margin-top:20px;">
+          <label>Theme</label>
+          <select id="themeSelect" class="input" onchange="changeTheme(this.value)">
+            <option value="default">Midnight Blue (Default)</option>
+            <option value="mint">Mint Fresh</option>
+            <option value="sunset">Sunset Vibes</option>
+          </select>
+        </div>
+        <div style="margin-top:20px;">
+          <label>Update Profile</label>
+          <button class="btn btn-ghost" onclick="localStorage.removeItem('st_profile'); location.reload();">Edit Name/Goal</button>
+        </div>
+        <div style="margin-top:20px;">
+          <button class="btn" style="background:var(--danger); color:white;" onclick="hardReset()">Reset All Data</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      POWERED BY <span>ABHI</span> • Version 3.0 Pro
+    </div>
+  </main>
+</div>
+
 <script>
-/* -------------------- State & Storage -------------------- */
-const uid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-let profile = JSON.parse(localStorage.getItem('st_profile')||'null');
-let tasks = JSON.parse(localStorage.getItem('st_tasks')||'[]');
-let history = JSON.parse(localStorage.getItem('st_history')||'{}'); // { '2025-11-24': 1500 }
-let reminders = JSON.parse(localStorage.getItem('st_reminders')||'[]');
-let settings = JSON.parse(localStorage.getItem('st_settings')||'{}');
-settings.goal = settings.goal || 60; // daily goal minutes
+/* --- Core Logic --- */
 
-/* DOM */
-const userHello = document.getElementById('userHello');
-const userClass = document.getElementById('userClass');
-const editProfile = document.getElementById('editProfile');
-const tasksList = document.getElementById('tasksList');
-const taskSummary = document.getElementById('taskSummary');
-const addTaskBtn = document.getElementById('addTask');
-const addTaskBtnTop = document.getElementById('addTaskBtnTop');
-const taskName = document.getElementById('taskName');
-const taskHours = document.getElementById('taskHours');
-const taskMins = document.getElementById('taskMins');
-const taskSub = document.getElementById('taskSub');
-const weeklyChartCtx = document.getElementById('weeklyChart').getContext('2d');
-const todayStat = document.getElementById('todayStat');
-const todayTasks = document.getElementById('todayTasks');
-const streakEl = document.getElementById('streak');
-const goalProgress = document.getElementById('goalProgress');
-const exportBtn = document.getElementById('exportBtn');
-const importBtn = document.getElementById('importBtn');
-const exportCSV = document.getElementById('exportCSV');
-const clearDataBtn = document.getElementById('clearData');
-const enableNotif = document.getElementById('enableNotif');
-const remTime = document.getElementById('remTime');
-const addReminder = document.getElementById('addReminder');
-const remList = document.getElementById('remList');
-const pomStart = document.getElementById('pomStart');
-const pomPause = document.getElementById('pomPause');
-const pomStop = document.getElementById('pomStop');
-const pomMinutes = document.getElementById('pomMinutes');
-const pomTimer = document.getElementById('pomTimer');
-const pomTask = document.getElementById('pomTask');
-const themePack = document.getElementById('themePack');
-const darkToggle = document.getElementById('darkToggle');
+// State
+let profile = JSON.parse(localStorage.getItem('st_profile'));
+let tasks = JSON.parse(localStorage.getItem('st_tasks') || '[]');
+let streak = parseInt(localStorage.getItem('st_streak') || '0');
+let lastStudyDate = localStorage.getItem('st_lastDate');
+let notes = localStorage.getItem('st_notes') || '';
+let theme = localStorage.getItem('st_theme') || 'default';
 
-/* Helpers */
-function todayISO(){ return new Date().toISOString().slice(0,10); }
-function formatTime(sec){ const m=Math.floor(sec/60); const s=sec%60; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` }
-function saveAll(){ localStorage.setItem('st_tasks', JSON.stringify(tasks)); localStorage.setItem('st_history', JSON.stringify(history)); localStorage.setItem('st_profile', JSON.stringify(profile)); localStorage.setItem('st_reminders', JSON.stringify(reminders)); localStorage.setItem('st_settings', JSON.stringify(settings)); }
+// DOM Elements
+const views = ['dashboard', 'planner', 'notes', 'settings'];
+const taskListEl = document.getElementById('taskListContainer');
 
-/* -------------------- Profile -------------------- */
-function applyProfile(){ if(profile){ userHello.textContent = `Hello, ${profile.name}`; userClass.textContent = profile.cls; } else { userHello.textContent = 'Hello, Student'; userClass.textContent = 'Add your class'; }}
-editProfile.onclick = ()=>{ const n = prompt('Naam'); const c = prompt('Class / Exam'); if(n && c){ profile={name:n,cls:c}; saveAll(); applyProfile(); }};
-applyProfile();
+// Init
+function init() {
+  if(!profile) {
+    document.getElementById('onboardingModal').classList.remove('hidden');
+  } else {
+    updateUI();
+    checkStreak();
+  }
+  
+  // Apply Theme
+  document.body.className = `theme-${theme}`;
+  document.getElementById('themeSelect').value = theme;
+  
+  // Load Notes
+  document.getElementById('scratchpad').value = notes;
+  
+  // Date
+  document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
+  
+  // Fake Users Update
+  setInterval(() => {
+    const el = document.getElementById('liveUsers');
+    let current = parseInt(el.innerText.replace(',',''));
+    el.innerText = (current + Math.floor(Math.random() * 5) - 2).toLocaleString();
+  }, 3000);
 
-/* -------------------- Tasks UI -------------------- */
-function pickColor(sub){ const map={Math:'#ef4444',Physics:'#60a5fa',Chemistry:'#fb923c',Biology:'#34d399',General:'#7c3aed'}; return map[sub]||'#7c3aed'; }
-
-function renderTasks(){ tasksList.innerHTML=''; let totalDone=0; tasks.forEach((t,idx)=>{
-  const div=document.createElement('div'); div.className='task-item'; div.style.borderLeft=`6px solid ${t.color||pickColor(t.sub)}`;
-  const left=document.createElement('div'); left.innerHTML=`<div style="font-weight:700">${escapeHtml(t.name)}</div><div class="small">${t.sub} • Target ${Math.floor(t.time/60)}h ${t.time%60}m</div>`;
-  const right=document.createElement('div'); right.style.textAlign='right';
-  const timer=document.createElement('div'); timer.className='small'; const doneSec = (t.time*60 - (t.timeLeft||0)); totalDone += Math.round(doneSec/60);
-  timer.textContent = `Done: ${Math.round(doneSec/60)} min`;
-  const actions=document.createElement('div'); actions.className='flex';
-  const start=document.createElement('button'); start.className='btn'; start.textContent = t.running? 'Pause':'Start';
-  const focus=document.createElement('button'); focus.className='btn'; focus.textContent='Focus';
-  const del=document.createElement('button'); del.className='btn'; del.textContent='Delete';
-  actions.append(start,focus,del);
-  right.append(timer,actions);
-  div.append(left,right);
-  tasksList.appendChild(div);
-
-  start.onclick = ()=>{ if(!t.timeLeft) t.timeLeft = t.time*60; t.running = !t.running; if(t.running) playBeep('start'); saveAll(); renderTasks(); };
-  focus.onclick = ()=>{ startFocusOnTask(t); };
-  del.onclick = ()=>{ if(confirm('Delete?')){ tasks.splice(idx,1); saveAll(); renderTasks(); updateStats(); } };
-});
- taskSummary.textContent = `${tasks.length} tasks • ${totalDone} min`;
+  // Load Chart
+  renderChart();
 }
 
-addTaskBtn.onclick = addTask; addTaskBtnTop.onclick = ()=>{ document.getElementById('taskName').focus(); };
-function addTask(){ const name=(taskName.value||'').trim(); if(!name){ alert('Task name'); return; } let h=parseInt(taskHours.value)||0; let m=parseInt(taskMins.value)||0; if(h===0 && m===0){ alert('Time set karo'); return; } const total=h*60+m; const t={id:uid(),name,sub:taskSub.value||'General',time:total,timeLeft:total*60,running:false,color:pickColor(taskSub.value||'General')}; tasks.unshift(t); taskName.value=''; taskHours.value=''; taskMins.value=''; saveAll(); renderTasks(); updateStats(); }
+// Onboarding
+function completeOnboarding() {
+  const name = document.getElementById('obName').value;
+  const cls = document.getElementById('obClass').value;
+  if(name) {
+    profile = { name, cls };
+    localStorage.setItem('st_profile', JSON.stringify(profile));
+    document.getElementById('onboardingModal').classList.add('hidden');
+    updateUI();
+  }
+}
 
-function escapeHtml(s){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-/* -------------------- Global ticker -------------------- */
-setInterval(()=>{
-  let dirty=false; const today=todayISO(); tasks.forEach(t=>{
-    if(t.running && t.timeLeft>0){ t.timeLeft--; dirty=true; history[today]=(history[today]||0)+1; }
-    if(t.running && t.timeLeft===0){ t.running=false; playBeep('end'); notify('Task complete', t.name); launchConfetti(); }
+// Navigation
+function showSection(id) {
+  views.forEach(v => {
+    document.getElementById(`section-${v}`).classList.add('hidden');
+    // document.querySelector(`.nav-item[onclick*="${v}"]`).classList.remove('active'); // simplified
   });
-  if(dirty){ saveAll(); renderTasks(); updateChart(); updateStats(); }
-},1000);
+  document.getElementById(`section-${id}`).classList.remove('hidden');
+}
 
-/* -------------------- Pomodoro -------------------- */
-let pomInterval=null, pomSeconds=0, pomTarget=null;
-function startFocusOnTask(task){ pomTarget = task; openPom(); startPom(); }
-function openPom(){ pomTask.textContent = pomTarget? pomTarget.name : '—'; }
-function startPom(){ const mins = parseInt(pomMinutes.value)||25; if(pomTarget){ pomSeconds = Math.min(pomTarget.timeLeft || (pomTarget.time*60), mins*60); } else pomSeconds = mins*60; if(pomInterval) clearInterval(pomInterval);
- pomInterval = setInterval(()=>{ if(pomSeconds>0){ pomSeconds--; updatePomUI(); if(pomTarget){ pomTarget.timeLeft = pomSeconds; } } else { clearInterval(pomInterval); pomInterval=null; playBeep('end'); notify('Focus complete','Good job!'); launchConfetti(); saveAll(); renderTasks(); updateStats(); } },1000); }
-function updatePomUI(){ pomTimer.textContent = formatTime(pomSeconds); }
-function pausePom(){ if(pomInterval) clearInterval(pomInterval), pomInterval=null; }
-function stopPom(){ if(pomInterval) clearInterval(pomInterval); pomInterval=null; pomSeconds=0; pomTimer.textContent='00:00'; pomTarget=null; pomTask.textContent='—'; }
-pomStart.onclick = ()=> startPom(); pomPause.onclick = ()=> pausePom(); pomStop.onclick = ()=> stopPom();
+// UI Updates
+function updateUI() {
+  if(profile) document.getElementById('userGreet').innerText = `Hello, ${profile.name}`;
+  document.getElementById('streakDisplay').innerText = streak;
+  renderTasks();
+}
 
-/* -------------------- Chart -------------------- */
-let chart = null;
+// Streak Logic
+function checkStreak() {
+  const today = new Date().toDateString();
+  if(lastStudyDate !== today) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if(lastStudyDate !== yesterday.toDateString()) {
+      // User missed a day (unless it's the very first day)
+      if(lastStudyDate) streak = 0; 
+    }
+  }
+  localStorage.setItem('st_streak', streak);
+  document.getElementById('streakDisplay').innerText = streak;
+}
 
-function initChart(){
-  if(chart) chart.destroy(); // destroy previous chart if exists
-  const labels = lastNDates(7).map(d => d.slice(5));
-  const data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
+function incrementStreak() {
+  const today = new Date().toDateString();
+  if(lastStudyDate !== today) {
+    streak++;
+    lastStudyDate = today;
+    localStorage.setItem('st_streak', streak);
+    localStorage.setItem('st_lastDate', today);
+    document.getElementById('streakDisplay').innerText = streak;
+    launchConfetti();
+    alert(`🔥 Streak Increased! You are on a ${streak} day streak.`);
+  }
+}
+
+// Task Manager
+function toggleTaskForm() {
+  const f = document.getElementById('addTaskForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function addTask() {
+  const name = document.getElementById('newTaskName').value;
+  const time = document.getElementById('newTaskTime').value || 25;
+  if(!name) return;
   
-  chart = new Chart(weeklyChartCtx, {
-    type: 'line',
+  tasks.unshift({ id: Date.now(), name, time: parseInt(time), completed: false });
+  saveTasks();
+  renderTasks();
+  document.getElementById('newTaskName').value = '';
+}
+
+function renderTasks() {
+  taskListEl.innerHTML = '';
+  let done = 0;
+  
+  tasks.forEach(t => {
+    if(t.completed) done++;
+    const div = document.createElement('div');
+    div.className = 'task-item';
+    div.style.opacity = t.completed ? '0.5' : '1';
+    div.innerHTML = `
+      <div>
+        <div style="font-weight:bold; text-decoration:${t.completed ? 'line-through' : 'none'}">${t.name}</div>
+        <div style="font-size:12px; color:rgba(255,255,255,0.6)">${t.time} mins</div>
+      </div>
+      <div class="task-actions">
+        ${!t.completed ? `<button class="btn btn-primary" style="padding:5px 10px; font-size:12px;" onclick="startFocus(${t.id})">Focus</button>` : ''}
+        <button class="btn btn-ghost" style="padding:5px 10px;" onclick="toggleTask(${t.id})">${t.completed ? 'Undo' : '✓'}</button>
+        <button class="btn btn-ghost" style="color:var(--danger); padding:5px;" onclick="deleteTask(${t.id})">×</button>
+      </div>
+    `;
+    taskListEl.appendChild(div);
+  });
+  
+  document.getElementById('doneCount').innerText = `${done}/${tasks.length}`;
+}
+
+function toggleTask(id) {
+  const t = tasks.find(x => x.id === id);
+  t.completed = !t.completed;
+  if(t.completed) {
+    incrementStreak(); // Smart Streak Hook
+    launchConfetti();
+  }
+  saveTasks();
+  renderTasks();
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(x => x.id !== id);
+  saveTasks();
+  renderTasks();
+}
+
+function saveTasks() {
+  localStorage.setItem('st_tasks', JSON.stringify(tasks));
+}
+
+// Focus Mode
+let timerInt = null;
+let secondsLeft = 0;
+let isPaused = false;
+
+function startFocus(id) {
+  const t = tasks.find(x => x.id === id);
+  document.getElementById('focusOverlay').classList.add('active');
+  document.getElementById('focusTaskName').innerText = `Focusing on: ${t.name}`;
+  secondsLeft = t.time * 60;
+  updateTimerDisplay();
+  
+  timerInt = setInterval(() => {
+    if(!isPaused) {
+      secondsLeft--;
+      updateTimerDisplay();
+      if(secondsLeft <= 0) {
+        clearInterval(timerInt);
+        playBeep();
+        alert('Focus Session Complete!');
+        exitFocus();
+        toggleTask(id); // Auto complete
+      }
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  document.getElementById('focusTimerDisplay').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function toggleTimer() { isPaused = !isPaused; }
+
+function exitFocus() {
+  clearInterval(timerInt);
+  document.getElementById('focusOverlay').classList.remove('active');
+}
+
+// AI Planner (Simulation)
+function generatePlan() {
+  const input = document.getElementById('aiSyllabus').value;
+  const dateStr = document.getElementById('aiDate').value;
+  const resDiv = document.getElementById('aiResult');
+  
+  if(!input || !dateStr) { alert("Please enter syllabus and date"); return; }
+  
+  const topics = input.split(',').map(s => s.trim()).filter(s => s);
+  const examDate = new Date(dateStr);
+  const today = new Date();
+  const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+  
+  if(daysLeft <= 0) { alert("Exam date must be in future!"); return; }
+  
+  const perDay = Math.ceil(topics.length / daysLeft);
+  
+  let html = `<h3>📅 Your AI Plan (${daysLeft} Days Left)</h3><div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px;">`;
+  html += `<p>You need to finish <strong>${perDay} topics/day</strong> to complete <strong>${topics.length} topics</strong>.</p>`;
+  html += `<ul style="font-size:14px; color:var(--text-muted);">`;
+  topics.slice(0, 5).forEach(t => html += `<li>${t}</li>`);
+  html += `<li>...and more.</li></ul>`;
+  html += `<button class="btn btn-primary" onclick="alert('Plan Saved to Tasks!')">Add to Daily Tasks</button></div>`;
+  
+  resDiv.innerHTML = html;
+}
+
+// Scratchpad
+const sp = document.getElementById('scratchpad');
+sp.addEventListener('input', () => localStorage.setItem('st_notes', sp.value));
+function downloadNotes() {
+  const blob = new Blob([sp.value], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'study-notes.txt';
+  a.click();
+}
+
+// Settings
+function changeTheme(val) {
+  localStorage.setItem('st_theme', val);
+  document.body.className = `theme-${val}`;
+}
+
+function hardReset() {
+  if(confirm("Delete EVERYTHING?")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+// Chart.js
+function renderChart() {
+  const ctx = document.getElementById('weeklyChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
     data: {
-      labels,
+      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
       datasets: [{
-        label: 'Minutes',
-        data,
-        fill: true,
-        tension: 0.35,
-        backgroundColor: 'rgba(255,255,255,0.06)',
-        borderColor: 'rgba(255,255,255,0.95)',
-        pointRadius: 4
+        label: 'Hours',
+        data: [2, 4, 3, 5, 2, 6, 4], // Placeholder data - link to real history in next update
+        backgroundColor: 'rgba(56, 189, 248, 0.5)',
+        borderColor: '#38bdf8',
+        borderWidth: 1,
+        borderRadius: 4
       }]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.9)' } },
-        x: { ticks: { color: 'rgba(255,255,255,0.9)' } }
-      },
-      plugins: { legend: { display: false } }
+        y: { display: false },
+        x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { display: false } }
+      }
     }
   });
 }
 
-function updateChart(){
-  if(!chart) initChart();
-  const labels = lastNDates(7).map(d => d.slice(5));
-  const data = lastNDates(7).map(d => Math.round((history[d]||0)/60));
-  
-  chart.data.labels = labels;
-  chart.data.datasets[0].data = data;
-  chart.update();
+// Utils: Confetti & Sound
+function launchConfetti() {
+  // Simple particle system
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let particles = [];
+  for(let i=0; i<100; i++) {
+    particles.push({
+      x: canvas.width/2, y: canvas.height/2,
+      dx: (Math.random()-0.5)*10, dy: (Math.random()-0.5)*10,
+      color: `hsl(${Math.random()*360}, 100%, 50%)`, life: 100
+    });
+  }
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach((p, i) => {
+      p.x += p.dx; p.y += p.dy; p.life--;
+      ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 5, 5);
+      if(p.life <= 0) particles.splice(i, 1);
+    });
+    if(particles.length) requestAnimationFrame(animate);
+  }
+  animate();
 }
-function lastNDates(n){ const arr=[]; for(let i=n-1;i>=0;i--){ const dt=new Date(); dt.setDate(dt.getDate()-i); arr.push(dt.toISOString().slice(0,10)); } return arr; }
 
-/* -------------------- Stats -------------------- */
-function updateStats(){ const today=todayISO(); const mins = Math.round((history[today]||0)/60); todayStat.textContent = `${mins} min`; todayTasks.textContent = `${tasks.length} tasks`; const streak = calcStreak(); streakEl.textContent = `${streak} days`; goalProgress.textContent = `Goal: ${mins}/${settings.goal} min`; }
-function calcStreak(){ let s=0; const arr=lastNDates(30).reverse(); for(const d of arr){ const m = Math.round((history[d]||0)/60); if(m>=settings.goal) s++; else break; } return s; }
+function playBeep() {
+  const a = new (window.AudioContext || window.webkitAudioContext)();
+  const o = a.createOscillator();
+  const g = a.createGain();
+  o.connect(g); g.connect(a.destination);
+  o.start(); g.gain.exponentialRampToValueAtTime(0.00001, a.currentTime + 1);
+  o.stop(a.currentTime + 1);
+}
 
-/* -------------------- Notifications & Reminders -------------------- */
-let notificationsAllowed = Notification && Notification.permission==='granted';
-function requestNotifications(){ if(!('Notification' in window)) return; if(Notification.permission==='default') Notification.requestPermission().then(p=>{ notificationsAllowed = p==='granted'; }); else notificationsAllowed = Notification.permission==='granted'; }
-enableNotif.onclick = requestNotifications;
-function notify(title, body){ if(notificationsAllowed){ try{ new Notification(title, { body }); }catch(e){ console.log('notify err',e); } } else requestNotifications(); }
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('installBtn');
+  btn.style.display = 'block';
+  btn.onclick = () => {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((result) => {
+      if (result.outcome === 'accepted') btn.style.display = 'none';
+    });
+  };
+});
 
-addReminder.onclick = ()=>{ const t = remTime.value; if(!t) return alert('Time choose karo'); reminders.push({id:uid(),time:t}); saveAll(); renderReminders(); }
-function renderReminders(){ remList.innerHTML=''; reminders.forEach(r=>{ const d=document.createElement('div'); d.className='small'; d.textContent = r.time + ' '; const del=document.createElement('button'); del.className='btn'; del.style.marginLeft='8px'; del.textContent='Remove'; del.onclick=()=>{ reminders = reminders.filter(x=>x.id!==r.id); saveAll(); renderReminders(); }; d.appendChild(del); remList.appendChild(d); }); }
-setInterval(()=>{ const now = new Date(); const hh = String(now.getHours()).padStart(2,'0'); const mm = String(now.getMinutes()).padStart(2,'0'); const key=`${hh}:${mm}`; reminders.forEach(r=>{ if(r.time===key){ notify('Reminder', `Time for ${r.time}`); } }); },60000);
-
-/* -------------------- Export / Import -------------------- */
-exportBtn.onclick = ()=>{ const data = {profile,tasks,history,reminders,settings}; const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='study-tracker-backup.json'; a.click(); URL.revokeObjectURL(url); };
-importBtn.onclick = ()=>{ const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload = ()=>{ try{ const data = JSON.parse(r.result); if(confirm('Import will overwrite local data. Continue?')){ profile=data.profile||profile; tasks=data.tasks||tasks; history=data.history||history; reminders=data.reminders||reminders; settings=data.settings||settings; saveAll(); renderAll(); } }catch(err){ alert('Invalid file'); } }; r.readAsText(f); }; inp.click(); };
-
-exportCSV.onclick = ()=>{ const rows=[['date','minutes']]; Object.entries(history).forEach(([k,v])=> rows.push([k, Math.round(v/60)])); const csv = rows.map(r=>r.join(',')).join('\n'); const blob = new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='study-history.csv'; a.click(); URL.revokeObjectURL(url); };
-
-clearDataBtn.onclick = ()=>{ if(confirm('Clear all local data?')){ localStorage.clear(); profile=null; tasks=[]; history={}; reminders=[]; settings={goal:60}; saveAll(); renderAll(); } };
-
-/* -------------------- Confetti & Sounds -------------------- */
-const confCanvas = document.createElement('canvas'); confCanvas.style.position='fixed'; confCanvas.style.inset='0'; confCanvas.style.pointerEvents='none'; confCanvas.style.zIndex='9999'; document.body.appendChild(confCanvas); const confCtx = confCanvas.getContext('2d'); function resizeConf(){ confCanvas.width=window.innerWidth; confCanvas.height=window.innerHeight; } window.addEventListener('resize', resizeConf); resizeConf(); let confetti=[]; function launchConfetti(){ confetti=[]; const W=confCanvas.width,H=confCanvas.height; for(let i=0;i<120;i++){ confetti.push({x:Math.random()*W,y:Math.random()*H-100, r:Math.random()*8+4, dx:(Math.random()-0.5)*6, dy:Math.random()*3+2, rot:Math.random()*360, color:`hsl(${Math.random()*360},90%,60%)`, life:Math.random()*60+60}); } requestAnimationFrame(confLoop); setTimeout(()=>confetti=[],2000); }
-function confLoop(){ confCtx.clearRect(0,0,confCanvas.width,confCanvas.height); confetti.forEach(p=>{ confCtx.save(); confCtx.translate(p.x,p.y); confCtx.rotate(p.rot*Math.PI/180); confCtx.fillStyle=p.color; confCtx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6); confCtx.restore(); p.x+=p.dx; p.y+=p.dy; p.rot+=6; }); if(confetti.length) requestAnimationFrame(confLoop); }
-
-const AudioCtx = window.AudioContext || window.webkitAudioContext; const audioCtx = new AudioCtx(); function playBeep(type){ const now=audioCtx.currentTime; const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); if(type==='start'){ o.frequency.setValueAtTime(330,now); o.frequency.linearRampToValueAtTime(660,now+0.12); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.3,now+0.02); g.gain.exponentialRampToValueAtTime(0.0001,now+0.18); } else { o.frequency.setValueAtTime(660,now); o.frequency.exponentialRampToValueAtTime(220,now+0.18); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.25,now+0.02); g.gain.exponentialRampToValueAtTime(0.0001,now+0.3); } o.start(now); o.stop(now+0.35); }
-
-/* -------------------- Theme Packs -------------------- */
-const THEME_PRESETS = { default:{'--bg':'linear-gradient(120deg,#0f1724,#071633)'}, 'neo-blue':{'--bg':'linear-gradient(120deg,#0ea5e9,#6366f1)'}, 'sunset':{'--bg':'linear-gradient(120deg,#ff7a18,#af002d)'}, 'mint':{'--bg':'linear-gradient(120deg,#a7f3d0,#4ade80)'}, 'dark-pro':{'--bg':'linear-gradient(120deg,#020617,#071633)'} };
-function applyTheme(key){ if(key==='auto'){ const h=new Date().getHours(); key = (h>=6 && h<18)? 'mint':'dark-pro'; } const preset = THEME_PRESETS[key]||THEME_PRESETS.default; Object.entries(preset).forEach(([k,v])=> document.documentElement.style.setProperty(k,v)); localStorage.setItem('st_themePack',key); }
-const savedPack = localStorage.getItem('st_themePack')||'default'; themePack.value = savedPack; applyTheme(savedPack); themePack.addEventListener('change', ()=> applyTheme(themePack.value));
-
-/* -------------------- Reminder check and init -------------------- */
-function checkRemindersLoop(){ const now=new Date(); const hh=String(now.getHours()).padStart(2,'0'); const mm=String(now.getMinutes()).padStart(2,'0'); const key=`${hh}:${mm}`; reminders.forEach(r=>{ if(r.time===key){ notify('Reminder', `It's time: ${r.time}`); } }); }
-setInterval(checkRemindersLoop,60000);
-
-/* -------------------- Render all -------------------- */
-function renderAll(){ renderTasks(); renderReminders(); updateChart(); updateStats(); applyProfile(); }
-renderAll();
-
-/* -------------------- Import initial demo if empty -------------------- */
-if(!tasks.length && !Object.keys(history).length){ const demoTask={id:uid(),name:'Revision: Algebra',sub:'Math',time:60,timeLeft:60*60,running:false,color:pickColor('Math')}; tasks.push(demoTask); history[todayISO()]=60*60; saveAll(); renderAll(); }
-/* -------------------- Service Worker registration -------------------- */
+// Service Worker Register
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(() => console.log('Service Worker registered'))
-    .catch(e => console.log('SW registration failed', e));
+  navigator.serviceWorker.register('./sw.js');
 }
-/* -------------------- Utility: start focus on a selected task -------------------- */
-function startFocusOnTaskById(id){ const t=tasks.find(x=>x.id===id); if(t){ startFocusOnTask(t); } }
 
-/* -------------------- Initial chart init -------------------- */
-initChart();
-
+// Start
+init();
 </script>
-
 </body>
 </html>
