@@ -8,25 +8,25 @@
   "description": "Plan · Focus · Finish — Powered by Abhi",
   "icons": [
     {
-      "src": "icons/app-logo-192.png",
+      "src": "/icons/app-logo-192.png",   
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/app-logo-512.png",
+      "src": "/icons/app-logo-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "screenshots": [
     {
-      "src": "icons/mobile-screenshot.png",
+      "src": "/icons/mobile-screenshot.png",
       "sizes": "400x800",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "icons/desktop-screenshot.png",
+      "src": "/icons/desktop-screenshot.png",
       "sizes": "1200x800",
       "type": "image/png",
       "form_factor": "wide"
