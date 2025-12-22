@@ -332,6 +332,19 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
     <div id="section-settings" class="hidden">
       <div class="glass-panel">
         <h2>⚙️ Settings</h2>
+<div style="margin-top:20px; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:12px; background:rgba(0,0,0,0.2);">
+    <div onclick="toggleHelp()" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+        <span style="font-weight:bold;">❓ How to Use App</span>
+        <span id="helpArrow">⬇️</span>
+    </div>
+    
+    <div id="helpContent" class="hidden" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px; font-size:13px; color:var(--text-muted); line-height:1.6;">
+        <p><strong>1. ✅ Add Tasks:</strong> Dashboard पर जाएं, टास्क का नाम और समय (Mins) लिखें और 'Add' दबाएं।</p>
+        <p><strong>2. 🔥 Start Focus:</strong> टास्क के बगल में 'Focus' बटन दबाएं। टाइमर शुरू हो जाएगा।</p>
+        <p><strong>3. 🤖 AI Planner:</strong> Planner टैब में चैप्टर्स और एग्जाम डेट डालें। AI प्लान बनाएगा।</p>
+        <p><strong>4. 📝 Scratchpad:</strong> मैथ सिम्बल्स के साथ नोट्स बनाएं। यह ऑटो-सेव होता है।</p>
+    </div>
+</div>
         
         <div style="margin-top:20px;">
             <label>Sound & Effects</label>
@@ -355,7 +368,12 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
       </div>
     </div>
 
-    <div class="footer">POWERED BY <span>ABHI</span> • Study Arc v3.1</div>
+    <div class="footer">
+    POWERED BY <span>ABHI</span> • Study Arc v3.1 <br>
+    <div style="margin-top: 5px;">
+        <a href="privacy.html" style="color: var(--text-muted); font-size: 11px; text-decoration: none;">Privacy Policy</a>
+    </div>
+</div>
   </main>
 </div>
 
@@ -597,6 +615,18 @@ function changeTheme(val) {
     document.body.className = `theme-${val}`;
 }
 function hardReset() { if(confirm("Reset Everything?")) { localStorage.clear(); location.reload(); } }
+// 👇 How to Use Toggle Logic (Paste Here)
+function toggleHelp() {
+    const el = document.getElementById('helpContent');
+    const arrow = document.getElementById('helpArrow');
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        arrow.innerText = '⬆️';
+    } else {
+        el.classList.add('hidden');
+        arrow.innerText = '⬇️';
+    }
+}
 
 // Audio
 function playBeep() {
