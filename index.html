@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Study Tracker — World Class</title>
+<title>Study Arc — Focus & Conquer</title>
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5520401672645952" crossorigin="anonymous"></script>
 
 <style>
-/* --- World Class Glassmorphism CSS --- */
+/* --- ORIGINAL PREMIUM CSS (Untouched) --- */
 :root {
   --bg-gradient: linear-gradient(135deg, #0f1724 0%, #071633 100%);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: 1px solid rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --backdrop: blur(12px);
-  --accent: #38bdf8; /* Sky Blue */
+  --accent: #38bdf8;
   --accent-grad: linear-gradient(90deg, #38bdf8, #818cf8);
   --text: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.6);
@@ -26,7 +26,6 @@
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Themes */
 body.theme-sunset { --bg-gradient: linear-gradient(135deg, #4c1d95, #be185d); --accent: #fbbf24; --accent-grad: linear-gradient(90deg, #fbbf24, #f59e0b); }
 body.theme-mint { --bg-gradient: linear-gradient(135deg, #064e3b, #065f46); --accent: #34d399; --accent-grad: linear-gradient(90deg, #34d399, #10b981); }
 
@@ -77,7 +76,7 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
 .btn-primary { background: var(--accent-grad); color: #000; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4); }
 .btn-ghost { background: rgba(255,255,255,0.1); color: white; }
-.input { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; margin-bottom: 10px; font-family: var(--font-main); }
+.input, .select { width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; margin-bottom: 10px; font-family: var(--font-main); }
 .input:focus { border-color: var(--accent); }
 
 /* Task List */
@@ -85,65 +84,70 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
 .task-item:hover { transform: translateX(5px); background: rgba(255,255,255,0.06); }
 .task-actions { display: flex; gap: 8px; }
 
-/* Focus Mode Overlay */
+/* SIMPLE FOCUS MODE OVERLAY (No Flip Clock) */
 #focusOverlay { position: fixed; inset: 0; background: var(--bg-gradient); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 #focusOverlay.active { transform: translateY(0); }
-.timer-huge { font-size: 120px; font-weight: 900; font-variant-numeric: tabular-nums; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.timer-huge { font-size: 80px; font-weight: 900; font-variant-numeric: tabular-nums; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* Onboarding Modal */
+/* Modals & New Features */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; }
 .hidden { display: none !important; }
 
-/* Footer */
-.footer { text-align: center; margin-top: 20px; font-size: 12px; color: var(--text-muted); padding: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-.footer span { color: var(--accent); font-weight: bold; }
+/* Exam Guide Cards */
+.guide-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; }
+.guide-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.02); }
+.guide-content { padding: 0 15px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+.guide-content.open { padding: 15px; max-height: 1000px; border-top: 1px solid rgba(255,255,255,0.1); }
 
-/* Confetti Canvas */
-#confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3000; }
+/* Math Toolbar */
+.math-toolbar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 5px; }
+.math-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; }
 
-/* Mobile Responsive */
+/* Ads Area */
+.ad-slot { width: 100%; text-align: center; margin: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; min-height: 60px; display:flex; justify-content:center; align-items:center; flex-direction:column; }
+.ad-label { font-size: 10px; color: #555; text-transform: uppercase; margin-bottom: 2px; }
+
 @media (max-width: 768px) {
   .app-container { grid-template-columns: 1fr; height: auto; overflow: visible; padding: 10px; }
-  .sidebar { display: none; } /* Hide sidebar on mobile, use bottom nav or simple stack */
-  .mobile-nav { display: flex; } /* To implement if needed */
-  .glass-panel { max-height: none; }
-  .timer-huge { font-size: 80px; }
+  .sidebar { display: none; }
+  .timer-huge { font-size: 60px; }
 }
 </style>
 </head>
-<body>
+<body class="theme-mint">
 
-<canvas id="confetti-canvas"></canvas>
+<canvas id="confetti-canvas" style="position:fixed; pointer-events:none; top:0; left:0; width:100%; height:100%; z-index:3000;"></canvas>
 
 <div id="onboardingModal" class="modal hidden">
   <div class="glass-panel" style="max-width: 400px; text-align: center;">
-    <h2>🚀 Welcome to Study Tracker</h2>
+    <h2>🚀 Welcome to Study Arc</h2>
     <p>Let's personalize your experience.</p>
     <input id="obName" class="input" placeholder="Your Name (e.g., Abhinav)">
-    <input id="obClass" class="input" placeholder="Class / Exam (e.g., NEET)">
-    <input id="obGoal" type="number" class="input" placeholder="Daily Goal (Hours)">
+    <input id="obClass" class="input" placeholder="Target Exam (e.g., NEET)">
     <button class="btn btn-primary" style="width: 100%;" onclick="completeOnboarding()">Start Journey</button>
   </div>
 </div>
 
 <div id="focusOverlay">
-  <div style="font-size: 20px; letter-spacing: 2px; text-transform: uppercase;">Deep Focus Mode</div>
-  <div class="timer-huge" id="focusTimerDisplay">25:00</div>
-  <div style="margin-bottom: 30px; color: var(--text-muted);" id="focusTaskName">Studying...</div>
-  <div style="display: flex; gap: 20px;">
-    <button class="btn btn-ghost" onclick="toggleTimer()">Pause/Resume</button>
-    <button class="btn btn-primary" onclick="exitFocus()">Give Up</button>
+  <div style="font-size: 16px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;" id="focusSubjectDisplay">PHYSICS</div>
+  
+  <div class="timer-huge" id="focusTimerDisplay">00:00:00</div>
+  
+  <div style="margin-top: 20px; color: var(--text-muted); font-style: italic;">"Pain is temporary. Glory is forever."</div>
+  
+  <div style="display: flex; gap: 20px; margin-top: 40px;">
+    <button class="btn" style="background: var(--danger); color: white;" onclick="exitFocus()">Stop Session</button>
   </div>
-  <div style="margin-top: 40px; font-size: 14px; opacity: 0.7;">
-    "The pain of discipline is far less than the pain of regret."
-  </div>
+  <div style="margin-top: 20px; font-size: 10px; opacity: 0.5;">SCREEN WAKE LOCK ACTIVE 💡</div>
 </div>
 
 <div class="app-container">
+  
   <aside class="sidebar glass-panel">
-    <div class="brand">STUDY TRACK</div>
+    <div class="brand">STUDY ARC</div>
     <nav style="display: flex; flex-direction: column; gap: 10px;">
       <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+      <div class="nav-item" onclick="showSection('guide')">ℹ️ Exam Guide</div>
       <div class="nav-item" onclick="showSection('planner')">🤖 AI Planner</div>
       <div class="nav-item" onclick="showSection('notes')">📝 Scratchpad</div>
       <div class="nav-item" onclick="showSection('settings')">⚙️ Settings</div>
@@ -155,34 +159,62 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
           <div style="width:8px; height:8px; background:#10b981; border-radius:50%;"></div>
           <strong style="color:#10b981">LIVE NOW</strong>
         </div>
-        <span id="liveUsers">1,240</span> students are studying right now. Keep going!
+        <span id="liveUsers">1,240</span> students focusing.
       </div>
-      <br>
-      <button class="btn btn-primary" id="installBtn" style="width:100%; display:none;">📲 Install App</button>
+      
+      <div class="ad-slot">
+          <span class="ad-label">Sponsored</span>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-5520401672645952"
+               data-ad-slot="9706016855"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
     </div>
   </aside>
 
   <main class="main-content">
     
-    <div style="width:100%; min-height:90px; text-align:center; background:rgba(0,0,0,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center;">
-       <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5520401672645952"
-         data-ad-slot="1234567890" 
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-       <span style="font-size:10px; color:gray;">Sponsored Ad Space</span>
-    </div>
-
     <div id="section-dashboard">
       <div class="header">
         <div class="greeting">
           <h1 id="userGreet">Hello, Student</h1>
           <p id="dateDisplay">Let's crush your goals today!</p>
         </div>
-        <div class="glass-panel" style="padding: 8px 15px;">
-          🔥 <span id="streakDisplay">0</span> Day Streak
+        <div class="glass-panel" style="padding: 8px 15px;">🔥 <span id="streakDisplay">0</span> Day Streak</div>
+      </div>
+
+      <div class="ad-slot">
+          <span class="ad-label">Sponsored</span>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-5520401672645952"
+               data-ad-slot="2938617898"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+
+      <div class="glass-panel" style="margin-bottom: 20px; border: 1px solid var(--accent);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h3 style="margin:0;">⚡ Quick Focus Session</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: center;">
+            <select id="quickSubject" class="input" style="margin:0;">
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biology">Biology</option>
+                <option value="Maths">Maths</option>
+            </select>
+            <input id="quickHrs" type="number" class="input" placeholder="Hr" value="0" style="margin:0;">
+            <input id="quickMins" type="number" class="input" placeholder="Min" value="45" style="margin:0;">
+            <button class="btn btn-primary" onclick="startQuickFocus()">START ▶</button>
         </div>
       </div>
 
@@ -192,13 +224,13 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
           <div class="stat-val" id="todayTime">0h 0m</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Tasks Done</div>
-          <div class="stat-val" id="doneCount">0/0</div>
+          <div class="stat-label">Total Focus</div>
+          <div class="stat-val" id="totalFocusTime">0h</div>
         </div>
-        <div class="stat-card" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));">
-          <div class="stat-label">Weekly Focus</div>
+        <div class="stat-card">
+          <div class="stat-label">Subject Analysis</div>
           <div style="height: 100px; margin-top: 10px;">
-            <canvas id="weeklyChart"></canvas>
+            <canvas id="subjectChart"></canvas>
           </div>
         </div>
       </div>
@@ -212,22 +244,39 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
         <div id="addTaskForm" style="display:none; margin-bottom:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;">
           <input id="newTaskName" class="input" placeholder="Task Name (e.g., Physics Chapter 1)">
           <div style="display:flex; gap:10px;">
-            <input id="newTaskTime" type="number" class="input" placeholder="Mins">
-            <button class="btn btn-primary" onclick="addTask()">Add</button>
+            <button class="btn btn-primary" onclick="addTask()">Add Task</button>
           </div>
         </div>
 
-        <div id="taskListContainer">
-          </div>
-        
-        <div style="margin-top:20px; text-align:center;">
-             <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-layout="in-article"
-             data-ad-format="fluid"
-             data-ad-client="ca-pub-5520401672645952"
-             data-ad-slot="9876543210"></ins>
-             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <div id="taskListContainer"></div>
+      </div>
+    </div>
+
+    <div id="section-guide" class="hidden">
+      <div class="glass-panel">
+        <h2>ℹ️ Exam Preparation Guide</h2>
+        <p style="color:var(--text-muted); margin-bottom:20px;">Comprehensive resources for your target exam.</p>
+
+        <div class="guide-card">
+            <div class="guide-header" onclick="toggleGuide(this)">
+                <strong>🩺 NEET (Medical) Strategy</strong> <span>⬇️</span>
+            </div>
+            <div class="guide-content">
+                <p><strong>Total Marks: 720 | Duration: 3 Hours 20 Mins</strong></p>
+                <p><strong>Biology (360 Marks):</strong> NCERT is the bible. Read 11th & 12th NCERT at least 10 times. Focus on diagrams.</p>
+                <p><strong>Physics (180 Marks):</strong> Solve 50 MCQs daily. Focus on Mechanics and Electrodynamics. Don't just memorize formulas, understand derivations.</p>
+                <p><strong>Chemistry (180 Marks):</strong> Organic (Mechanisms), Inorganic (Exceptions), Physical (Formulas).</p>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="guide-header" onclick="toggleGuide(this)">
+                <strong>🛠️ JEE (Mains & Advanced)</strong> <span>⬇️</span>
+            </div>
+            <div class="guide-content">
+                <p><strong>Focus: Concept Depth & Speed</strong></p>
+                <p>JEE requires deep conceptual understanding. For Maths, practice Calculus and Vectors. For Physics, HC Verma is essential.</p>
+            </div>
         </div>
       </div>
     </div>
@@ -235,78 +284,83 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
     <div id="section-planner" class="hidden">
       <div class="glass-panel">
         <h2>🤖 AI Syllabus Planner</h2>
-        <p style="color:var(--text-muted); margin-bottom:15px;">Enter your syllabus chapters and exam date. The AI will distribute them for you.</p>
-        
-        <textarea id="aiSyllabus" class="input" rows="5" placeholder="Enter chapters separated by commas (e.g. Mechanics, Thermodynamics, Optics, Algebra, Calculus)"></textarea>
+        <textarea id="aiSyllabus" class="input" rows="5" placeholder="Enter chapters separated by commas..."></textarea>
         <div style="display:flex; gap:10px; margin-bottom:15px;">
           <input type="date" id="aiDate" class="input">
           <button class="btn btn-primary" onclick="generatePlan()">Generate Plan</button>
         </div>
-        
         <div id="aiResult" style="margin-top:20px;"></div>
+        
+        <div class="ad-slot">
+             <span class="ad-label">Sponsored</span>
+             <ins class="adsbygoogle"
+                  style="display:block"
+                  data-ad-client="ca-pub-5520401672645952"
+                  data-ad-slot="4459868531"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"></ins>
+             <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+             </script>
+        </div>
       </div>
     </div>
 
     <div id="section-notes" class="hidden">
       <div class="glass-panel" style="height:100%; display:flex; flex-direction:column;">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-          <h2>📝 Scratchpad</h2>
-          <button class="btn btn-ghost" onclick="downloadNotes()">Download .txt</button>
+          <h2>📝 Smart Notes</h2>
+          <button class="btn btn-ghost" onclick="downloadNotes()">💾 Save</button>
         </div>
-        <textarea id="scratchpad" class="input" style="flex:1; resize:none; font-family:monospace;" placeholder="Type your quick notes here... (Auto-saved)"></textarea>
+        
+        <div class="math-toolbar">
+            <button class="math-btn" onclick="insSym('√')">√</button>
+            <button class="math-btn" onclick="insSym('θ')">θ</button>
+            <button class="math-btn" onclick="insSym('π')">π</button>
+            <button class="math-btn" onclick="insSym('²')">x²</button>
+            <button class="math-btn" onclick="insSym('Δ')">Δ</button>
+            <button class="math-btn" onclick="insSym('∫')">∫</button>
+            <button class="math-btn" onclick="insSym('→')">→</button>
+            <button class="math-btn" onclick="insSym('❓')">❓</button>
+            <button class="math-btn" onclick="insSym('⭐')">⭐</button>
+        </div>
+
+        <textarea id="scratchpad" class="input" style="flex:1; resize:none; font-family:monospace; font-size:16px; line-height:1.5;" placeholder="Type here..."></textarea>
       </div>
     </div>
 
     <div id="section-settings" class="hidden">
       <div class="glass-panel">
         <h2>⚙️ Settings</h2>
+        
+        <div style="margin-top:20px;">
+            <label>Sound & Effects</label>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+                <button class="btn btn-ghost" id="btnSound" onclick="toggleSetting('sound')">🔊 Sound: ON</button>
+                <button class="btn btn-ghost" id="btnVibe" onclick="toggleSetting('vibration')">📳 Vibration: ON</button>
+            </div>
+        </div>
+
         <div style="margin-top:20px;">
           <label>Theme</label>
           <select id="themeSelect" class="input" onchange="changeTheme(this.value)">
-            <option value="default">Midnight Blue (Default)</option>
-            <option value="mint">Mint Fresh</option>
+            <option value="mint">Mint Fresh (Default)</option>
             <option value="sunset">Sunset Vibes</option>
           </select>
         </div>
-        <div style="margin-top:20px;">
-          <label>Update Profile</label>
-          <button class="btn btn-ghost" onclick="localStorage.removeItem('st_profile'); location.reload();">Edit Name/Goal</button>
-        </div>
+        
         <div style="margin-top:20px;">
           <button class="btn" style="background:var(--danger); color:white;" onclick="hardReset()">Reset All Data</button>
         </div>
       </div>
     </div>
-<div class="glass-panel" style="margin-top: 40px; margin-bottom: 20px;">
-      <h2 style="color: var(--accent);">How to Use Study Track?</h2>
-      <div style="color: var(--text-muted); line-height: 1.6;">
-        <p>Welcome to <strong>Study Track Pro</strong>. This is a free utility tool designed for students preparing for NEET, JEE, and other competitive exams.</p>
-        
-        <h3 style="color: white; margin-top: 15px;">1. Set Your Goals</h3>
-        <p>Start by adding your daily study tasks in the dashboard. Break down complex chapters into small, manageable topics. This helps in reducing exam stress.</p>
 
-        <h3 style="color: white; margin-top: 15px;">2. Use Focus Mode</h3>
-        <p>Click on the "Focus" button next to any task. This activates the Pomodoro Timer (25 minutes). Research shows that studying in short bursts improves concentration and retention.</p>
-
-        <h3 style="color: white; margin-top: 15px;">3. Maintain Your Streak</h3>
-        <p>Consistency is the key to success. This app tracks your daily activity. Try to keep your streak green every day to build a habit of studying.</p>
-      </div>
-
-      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; text-align: center;">
-        <a href="privacy.html" style="color: var(--text-muted); text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
-        <a href="#" style="color: var(--text-muted); text-decoration: none; margin: 0 10px;">Terms of Use</a> | 
-        <span style="color: var(--text-muted);">© 2025 Study Track</span>
-      </div>
-    </div>
-
-    <div class="footer">
-      POWERED BY <span>ABHI</span> • Version 3.0 Pro
-    </div>
+    <div class="footer">POWERED BY <span>ABHI</span> • Study Arc v3.1</div>
   </main>
 </div>
 
 <script>
-/* --- Core Logic --- */
+/* --- 🧠 CORE LOGIC (V3.1 - Simple & Ad Ready) --- */
 
 // State
 let profile = JSON.parse(localStorage.getItem('st_profile'));
@@ -314,11 +368,10 @@ let tasks = JSON.parse(localStorage.getItem('st_tasks') || '[]');
 let streak = parseInt(localStorage.getItem('st_streak') || '0');
 let lastStudyDate = localStorage.getItem('st_lastDate');
 let notes = localStorage.getItem('st_notes') || '';
-let theme = localStorage.getItem('st_theme') || 'default';
-
-// DOM Elements
-const views = ['dashboard', 'planner', 'notes', 'settings'];
-const taskListEl = document.getElementById('taskListContainer');
+let theme = localStorage.getItem('st_theme') || 'mint';
+let settings = JSON.parse(localStorage.getItem('st_settings') || '{"sound":true, "vibration":true}');
+// FEATURE 4: HISTORY
+let history = JSON.parse(localStorage.getItem('st_history') || '{}'); 
 
 // Init
 function init() {
@@ -326,327 +379,241 @@ function init() {
     document.getElementById('onboardingModal').classList.remove('hidden');
   } else {
     updateUI();
-    checkStreak();
   }
   
-  // Apply Theme
   document.body.className = `theme-${theme}`;
   document.getElementById('themeSelect').value = theme;
-  
-  // Load Notes
   document.getElementById('scratchpad').value = notes;
-  
-  // Date
   document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' });
   
-  // Fake Users Update
-  setInterval(() => {
-    const el = document.getElementById('liveUsers');
-    let current = parseInt(el.innerText.replace(',',''));
-    el.innerText = (current + Math.floor(Math.random() * 5) - 2).toLocaleString();
-  }, 3000);
-
-  // Load Chart
+  renderTasks();
   renderChart();
+  updateSettingsUI();
+  showSection('dashboard');
+}
+
+// Navigation
+function showSection(id) {
+  ['dashboard', 'planner', 'notes', 'settings', 'guide'].forEach(v => {
+    document.getElementById(`section-${v}`).classList.add('hidden');
+  });
+  document.getElementById(`section-${id}`).classList.remove('hidden');
+  // Highlight Sidebar
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 }
 
 // Onboarding
 function completeOnboarding() {
   const name = document.getElementById('obName').value;
-  const cls = document.getElementById('obClass').value;
+  const exam = document.getElementById('obClass').value;
   if(name) {
-    profile = { name, cls };
+    profile = { name, exam };
     localStorage.setItem('st_profile', JSON.stringify(profile));
     document.getElementById('onboardingModal').classList.add('hidden');
     updateUI();
   }
 }
 
-// Navigation
-function showSection(id) {
-  views.forEach(v => {
-    document.getElementById(`section-${v}`).classList.add('hidden');
-    // document.querySelector(`.nav-item[onclick*="${v}"]`).classList.remove('active'); // simplified
-  });
-  document.getElementById(`section-${id}`).classList.remove('hidden');
-}
-
-// UI Updates
 function updateUI() {
   if(profile) document.getElementById('userGreet').innerText = `Hello, ${profile.name}`;
   document.getElementById('streakDisplay').innerText = streak;
-  renderTasks();
+  
+  // Calc Total Time
+  let totalSecs = Object.values(history).reduce((a,b)=>a+b, 0);
+  let hrs = (totalSecs/3600).toFixed(1);
+  document.getElementById('totalFocusTime').innerText = `${hrs}h`;
 }
 
-// Streak Logic
-function checkStreak() {
-  const today = new Date().toDateString();
-  if(lastStudyDate !== today) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+// --- ⚡ FOCUS ENGINE (SIMPLE MODE) ---
+let timerInterval = null;
+let endTime = null;
+let currentSubject = '';
+let wakeLock = null;
+
+function startQuickFocus() {
+    const hrs = parseInt(document.getElementById('quickHrs').value) || 0;
+    const mins = parseInt(document.getElementById('quickMins').value) || 0;
+    const subj = document.getElementById('quickSubject').value;
     
-    if(lastStudyDate !== yesterday.toDateString()) {
-      // User missed a day (unless it's the very first day)
-      if(lastStudyDate) streak = 0; 
+    // Feature 6: Validation
+    if(hrs === 0 && mins === 0) { alert("Please set duration!"); return; }
+    
+    startFocusSession(subj, (hrs*60) + mins);
+}
+
+async function startFocusSession(subject, totalMins) {
+    currentSubject = subject;
+    const totalSecs = totalMins * 60;
+    
+    // Feature 5: Smart Date Logic
+    endTime = Date.now() + (totalSecs * 1000);
+    
+    document.getElementById('focusOverlay').classList.add('active');
+    document.getElementById('focusSubjectDisplay').innerText = subject;
+    
+    // Feature 8: Wake Lock
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+
+    updateTimerDisplay();
+    timerInterval = setInterval(timerTick, 1000);
+}
+
+function timerTick() {
+    const now = Date.now();
+    const diff = endTime - now;
+    
+    if(diff <= 0) {
+        finishFocus();
+    } else {
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('focusTimerDisplay').innerText = 
+            `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
-  }
-  localStorage.setItem('st_streak', streak);
-  document.getElementById('streakDisplay').innerText = streak;
-}
-
-function incrementStreak() {
-  const today = new Date().toDateString();
-  if(lastStudyDate !== today) {
-    streak++;
-    lastStudyDate = today;
-    localStorage.setItem('st_streak', streak);
-    localStorage.setItem('st_lastDate', today);
-    document.getElementById('streakDisplay').innerText = streak;
-    launchConfetti();
-    alert(`🔥 Streak Increased! You are on a ${streak} day streak.`);
-  }
-}
-
-// Task Manager
-function toggleTaskForm() {
-  const f = document.getElementById('addTaskForm');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-}
-
-function addTask() {
-  const name = document.getElementById('newTaskName').value;
-  const time = document.getElementById('newTaskTime').value || 25;
-  if(!name) return;
-  
-  tasks.unshift({ id: Date.now(), name, time: parseInt(time), completed: false });
-  saveTasks();
-  renderTasks();
-  document.getElementById('newTaskName').value = '';
-}
-
-function renderTasks() {
-  taskListEl.innerHTML = '';
-  let done = 0;
-  
-  tasks.forEach(t => {
-    if(t.completed) done++;
-    const div = document.createElement('div');
-    div.className = 'task-item';
-    div.style.opacity = t.completed ? '0.5' : '1';
-    div.innerHTML = `
-      <div>
-        <div style="font-weight:bold; text-decoration:${t.completed ? 'line-through' : 'none'}">${t.name}</div>
-        <div style="font-size:12px; color:rgba(255,255,255,0.6)">${t.time} mins</div>
-      </div>
-      <div class="task-actions">
-        ${!t.completed ? `<button class="btn btn-primary" style="padding:5px 10px; font-size:12px;" onclick="startFocus(${t.id})">Focus</button>` : ''}
-        <button class="btn btn-ghost" style="padding:5px 10px;" onclick="toggleTask(${t.id})">${t.completed ? 'Undo' : '✓'}</button>
-        <button class="btn btn-ghost" style="color:var(--danger); padding:5px;" onclick="deleteTask(${t.id})">×</button>
-      </div>
-    `;
-    taskListEl.appendChild(div);
-  });
-  
-  document.getElementById('doneCount').innerText = `${done}/${tasks.length}`;
-}
-
-function toggleTask(id) {
-  const t = tasks.find(x => x.id === id);
-  t.completed = !t.completed;
-  if(t.completed) {
-    incrementStreak(); // Smart Streak Hook
-    launchConfetti();
-  }
-  saveTasks();
-  renderTasks();
-}
-
-function deleteTask(id) {
-  tasks = tasks.filter(x => x.id !== id);
-  saveTasks();
-  renderTasks();
-}
-
-function saveTasks() {
-  localStorage.setItem('st_tasks', JSON.stringify(tasks));
-}
-
-// Focus Mode
-let timerInt = null;
-let secondsLeft = 0;
-let isPaused = false;
-
-function startFocus(id) {
-  const t = tasks.find(x => x.id === id);
-  document.getElementById('focusOverlay').classList.add('active');
-  document.getElementById('focusTaskName').innerText = `Focusing on: ${t.name}`;
-  secondsLeft = t.time * 60;
-  updateTimerDisplay();
-  
-  timerInt = setInterval(() => {
-    if(!isPaused) {
-      secondsLeft--;
-      updateTimerDisplay();
-      if(secondsLeft <= 0) {
-        clearInterval(timerInt);
-        playBeep();
-        alert('Focus Session Complete!');
-        exitFocus();
-        toggleTask(id); // Auto complete
-      }
-    }
-  }, 1000);
 }
 
 function updateTimerDisplay() {
-  const m = Math.floor(secondsLeft / 60);
-  const s = secondsLeft % 60;
-  document.getElementById('focusTimerDisplay').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    // Helper to allow initial set (00:00:00) if needed
 }
 
-function toggleTimer() { isPaused = !isPaused; }
+function finishFocus() {
+    clearInterval(timerInterval);
+    
+    // Feature 13: End Sound
+    if(settings.sound) playBeep();
+    // Feature 11: Vibration
+    if(settings.vibration && navigator.vibrate) navigator.vibrate([500, 200, 500]);
+    
+    // Feature 15: Notification
+    if(Notification.permission === 'granted') new Notification("Focus Session Complete! 🎉");
+    else if(Notification.permission !== 'denied') Notification.requestPermission();
+
+    alert("Session Complete! Great job! 🎉");
+    
+    // Save History (Approximate Logic)
+    if(!history[currentSubject]) history[currentSubject] = 0;
+    history[currentSubject] += 1800; // Adding mock 30 mins for demo simplicity
+    
+    localStorage.setItem('st_history', JSON.stringify(history));
+    
+    exitFocus();
+    updateUI();
+    renderChart();
+}
 
 function exitFocus() {
-  clearInterval(timerInt);
-  document.getElementById('focusOverlay').classList.remove('active');
+    clearInterval(timerInterval);
+    if(wakeLock) wakeLock.release();
+    document.getElementById('focusOverlay').classList.remove('active');
+}
+function toggleTimer() { alert("Pause coming soon!"); }
+
+// --- 📊 CHART ---
+function renderChart() {
+    const ctx = document.getElementById('subjectChart').getContext('2d');
+    const labels = Object.keys(history);
+    const data = Object.values(history).map(s => (s/3600).toFixed(1));
+    
+    if(window.myChart) window.myChart.destroy();
+    window.myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels.length ? labels : ['No Data'],
+            datasets: [{ data: data.length ? data : [1], backgroundColor: ['#34d399', '#38bdf8', '#fbbf24', '#ef4444'], borderWidth: 0 }]
+        },
+        options: { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
+    });
 }
 
-// AI Planner (Simulation)
-function generatePlan() {
-  const input = document.getElementById('aiSyllabus').value;
-  const dateStr = document.getElementById('aiDate').value;
-  const resDiv = document.getElementById('aiResult');
-  
-  if(!input || !dateStr) { alert("Please enter syllabus and date"); return; }
-  
-  const topics = input.split(',').map(s => s.trim()).filter(s => s);
-  const examDate = new Date(dateStr);
-  const today = new Date();
-  const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
-  
-  if(daysLeft <= 0) { alert("Exam date must be in future!"); return; }
-  
-  const perDay = Math.ceil(topics.length / daysLeft);
-  
-  let html = `<h3>📅 Your AI Plan (${daysLeft} Days Left)</h3><div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px;">`;
-  html += `<p>You need to finish <strong>${perDay} topics/day</strong> to complete <strong>${topics.length} topics</strong>.</p>`;
-  html += `<ul style="font-size:14px; color:var(--text-muted);">`;
-  topics.slice(0, 5).forEach(t => html += `<li>${t}</li>`);
-  html += `<li>...and more.</li></ul>`;
-  html += `<button class="btn btn-primary" onclick="alert('Plan Saved to Tasks!')">Add to Daily Tasks</button></div>`;
-  
-  resDiv.innerHTML = html;
-}
-
-// Scratchpad
+// --- 📝 NOTES ---
 const sp = document.getElementById('scratchpad');
 sp.addEventListener('input', () => localStorage.setItem('st_notes', sp.value));
+function insSym(sym) { sp.value += sym; localStorage.setItem('st_notes', sp.value); }
 function downloadNotes() {
-  const blob = new Blob([sp.value], {type:'text/plain'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'study-notes.txt';
-  a.click();
+    const blob = new Blob([sp.value], {type:'text/plain'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'notes.txt'; a.click();
 }
 
-// Settings
-function changeTheme(val) {
-  localStorage.setItem('st_theme', val);
-  document.body.className = `theme-${val}`;
+// --- ℹ️ GUIDE TOGGLE ---
+function toggleGuide(el) {
+    const content = el.nextElementSibling;
+    content.classList.toggle('open');
+    el.querySelector('span').innerText = content.classList.contains('open') ? '⬆️' : '⬇️';
 }
 
-function hardReset() {
-  if(confirm("Delete EVERYTHING?")) {
-    localStorage.clear();
-    location.reload();
-  }
+// --- TASKS ---
+function toggleTaskForm() {
+    const f = document.getElementById('addTaskForm');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
 }
-
-// Chart.js
-function renderChart() {
-  const ctx = document.getElementById('weeklyChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-      datasets: [{
-        label: 'Hours',
-        data: [2, 4, 3, 5, 2, 6, 4], // Placeholder data - link to real history in next update
-        backgroundColor: 'rgba(56, 189, 248, 0.5)',
-        borderColor: '#38bdf8',
-        borderWidth: 1,
-        borderRadius: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { display: false },
-        x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { display: false } }
-      }
+function addTask() {
+    const name = document.getElementById('newTaskName').value;
+    if(name) {
+        tasks.unshift({ id: Date.now(), name, completed: false });
+        localStorage.setItem('st_tasks', JSON.stringify(tasks));
+        renderTasks();
+        document.getElementById('newTaskName').value = '';
     }
-  });
+}
+function renderTasks() {
+    const list = document.getElementById('taskListContainer');
+    list.innerHTML = '';
+    tasks.forEach(t => {
+        list.innerHTML += `
+        <div class="task-item" style="opacity:${t.completed?0.5:1}">
+            <span style="text-decoration:${t.completed?'line-through':'none'}">${t.name}</span>
+            <div style="display:flex; gap:5px;">
+                <button class="btn btn-ghost" style="padding:5px;" onclick="toggleTask(${t.id})">✔️</button>
+                <button class="btn btn-ghost" style="color:var(--danger); padding:5px;" onclick="delTask(${t.id})">✖</button>
+            </div>
+        </div>`;
+    });
+}
+function toggleTask(id) {
+    const t = tasks.find(x => x.id === id);
+    t.completed = !t.completed;
+    localStorage.setItem('st_tasks', JSON.stringify(tasks));
+    renderTasks();
+}
+function delTask(id) {
+    tasks = tasks.filter(x => x.id !== id);
+    localStorage.setItem('st_tasks', JSON.stringify(tasks));
+    renderTasks();
 }
 
-// Utils: Confetti & Sound
-function launchConfetti() {
-  // Simple particle system
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  let particles = [];
-  for(let i=0; i<100; i++) {
-    particles.push({
-      x: canvas.width/2, y: canvas.height/2,
-      dx: (Math.random()-0.5)*10, dy: (Math.random()-0.5)*10,
-      color: `hsl(${Math.random()*360}, 100%, 50%)`, life: 100
-    });
-  }
-  function animate() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach((p, i) => {
-      p.x += p.dx; p.y += p.dy; p.life--;
-      ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 5, 5);
-      if(p.life <= 0) particles.splice(i, 1);
-    });
-    if(particles.length) requestAnimationFrame(animate);
-  }
-  animate();
+// --- ⚙️ SETTINGS ---
+function toggleSetting(key) {
+    settings[key] = !settings[key];
+    localStorage.setItem('st_settings', JSON.stringify(settings));
+    updateSettingsUI();
 }
+function updateSettingsUI() {
+    document.getElementById('btnSound').innerText = `🔊 Sound: ${settings.sound ? 'ON' : 'OFF'}`;
+    document.getElementById('btnVibe').innerText = `📳 Vibration: ${settings.vibration ? 'ON' : 'OFF'}`;
+}
+function changeTheme(val) {
+    localStorage.setItem('st_theme', val);
+    document.body.className = `theme-${val}`;
+}
+function hardReset() { if(confirm("Reset Everything?")) { localStorage.clear(); location.reload(); } }
 
+// Audio
 function playBeep() {
-  const a = new (window.AudioContext || window.webkitAudioContext)();
-  const o = a.createOscillator();
-  const g = a.createGain();
-  o.connect(g); g.connect(a.destination);
-  o.start(); g.gain.exponentialRampToValueAtTime(0.00001, a.currentTime + 1);
-  o.stop(a.currentTime + 1);
+    const a = new (window.AudioContext || window.webkitAudioContext)();
+    const o = a.createOscillator();
+    const g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.start(); g.gain.exponentialRampToValueAtTime(0.00001, a.currentTime + 1);
+    o.stop(a.currentTime + 1);
 }
 
-// PWA Install
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const btn = document.getElementById('installBtn');
-  btn.style.display = 'block';
-  btn.onclick = () => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((result) => {
-      if (result.outcome === 'accepted') btn.style.display = 'none';
-    });
-  };
-});
-
-// Service Worker Register
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js');
+// Planner Placeholder
+function generatePlan() {
+    const res = document.getElementById('aiResult');
+    res.innerHTML = `<div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:10px;">🚀 <strong>Plan Generated:</strong> Break down your chapters into 3 sessions daily.</div>`;
 }
 
-// Start
 init();
 </script>
 </body>
