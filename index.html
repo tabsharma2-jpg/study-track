@@ -254,30 +254,100 @@ body { margin: 0; font-family: var(--font-main); background: var(--bg-gradient);
 
     <div id="section-guide" class="hidden">
       <div class="glass-panel">
-        <h2>ℹ️ Exam Preparation Guide</h2>
-        <p style="color:var(--text-muted); margin-bottom:20px;">Comprehensive resources for your target exam.</p>
+        <h2>ℹ️ Exam Success Hub</h2>
+        <p style="color:var(--text-muted); margin-bottom:20px;">Detailed strategy, official links & free resources.</p>
 
         <div class="guide-card">
             <div class="guide-header" onclick="toggleGuide(this)">
-                <strong>🩺 NEET (Medical) Strategy</strong> <span>⬇️</span>
+                <strong>🩺 NEET (Medical) Full Roadmap</strong> <span>⬇️</span>
             </div>
             <div class="guide-content">
-                <p><strong>Total Marks: 720 | Duration: 3 Hours 20 Mins</strong></p>
-                <p><strong>Biology (360 Marks):</strong> NCERT is the bible. Read 11th & 12th NCERT at least 10 times. Focus on diagrams.</p>
-                <p><strong>Physics (180 Marks):</strong> Solve 50 MCQs daily. Focus on Mechanics and Electrodynamics. Don't just memorize formulas, understand derivations.</p>
-                <p><strong>Chemistry (180 Marks):</strong> Organic (Mechanisms), Inorganic (Exceptions), Physical (Formulas).</p>
+                <h4 style="color:var(--accent); margin-top:10px;">Target: 680+ Marks</h4>
+                <p>NEET भारत का सबसे कठिन मेडिकल एंट्रेंस है। यहाँ सफलता के लिए <strong>NCERT</strong> ही सब कुछ है।</p>
+                
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin:10px 0;">
+                    <strong>🔗 Official Links:</strong><br>
+                    <a href="https://neet.nta.nic.in/" target="_blank" style="color:var(--accent);">👉 Official NTA NEET Website</a><br>
+                    <a href="https://ncert.nic.in/textbook.php" target="_blank" style="color:var(--accent);">👉 Download NCERT PDFs</a>
+                </div>
+
+                <h5 style="margin-bottom:5px;">🧬 Biology (360 Marks) - High Weightage</h5>
+                <ul style="padding-left:20px; margin-top:5px;">
+                    <li><strong>Genetics & Evolution:</strong> सबसे ज्यादा सवाल (15-18 Questions) यहीं से आते हैं।</li>
+                    <li><strong>Ecology:</strong> आसान है पर स्कोरिंग है।</li>
+                    <li><strong>Human Physiology:</strong> समझने के लिए ज़रूरी, डॉक्टरी की नींव है।</li>
+                </ul>
+
+                <h5 style="margin-bottom:5px;">🔭 Physics - Easy Kill Topics</h5>
+                <p>अगर फिजिक्स कमज़ोर है, तो पहले इन चैप्टर्स को पक्का करें:</p>
+                <ul style="padding-left:20px; margin-top:5px;">
+                    <li>Semiconductors & Logic Gates (8-12 Marks पक्के)</li>
+                    <li>Modern Physics (Atoms, Nuclei)</li>
+                    <li>Units & Dimensions (सबसे आसान)</li>
+                </ul>
             </div>
         </div>
 
         <div class="guide-card">
             <div class="guide-header" onclick="toggleGuide(this)">
-                <strong>🛠️ JEE (Mains & Advanced)</strong> <span>⬇️</span>
+                <strong>🛠️ JEE (Mains & Advanced) Guide</strong> <span>⬇️</span>
             </div>
             <div class="guide-content">
-                <p><strong>Focus: Concept Depth & Speed</strong></p>
-                <p>JEE requires deep conceptual understanding. For Maths, practice Calculus and Vectors. For Physics, HC Verma is essential.</p>
+                <h4 style="color:var(--accent); margin-top:10px;">Engineering Excellence</h4>
+                <p>JEE में सवाल दोहराए नहीं जाते, कॉन्सेप्ट्स दोहराए जाते हैं।</p>
+
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin:10px 0;">
+                    <strong>🔗 Important Resources:</strong><br>
+                    <a href="https://jeemain.nta.nic.in/" target="_blank" style="color:var(--accent);">👉 JEE Main Official Site</a><br>
+                    <a href="https://nptel.ac.in/" target="_blank" style="color:var(--accent);">👉 NPTEL (IIT Lectures Free)</a>
+                </div>
+                
+                <h5 style="margin-bottom:5px;">🧮 Maths - The Game Changer</h5>
+                <ul style="padding-left:20px; margin-top:5px;">
+                    <li><strong>Calculus:</strong> इसका वेटेज 30-35% होता है।</li>
+                    <li><strong>Vectors & 3D:</strong> विज़ुअलाइज़ेशन ज़रूरी है।</li>
+                </ul>
+
+                <h5 style="margin-bottom:5px;">🧪 Chemistry - Scoring Subject</h5>
+                <p>केमिस्ट्री में कम समय देकर ज्यादा मार्क्स लाए जा सकते हैं। NCERT को लाइन-बाय-लाइन रट लें, खासकर Inorganic के लिए।</p>
             </div>
         </div>
+
+        <div class="guide-card">
+            <div class="guide-header" onclick="toggleGuide(this)">
+                <strong>📚 Free Govt Study Resources</strong> <span>⬇️</span>
+            </div>
+            <div class="guide-content">
+                <p>पैसे की कमी पढ़ाई में रुकावट नहीं बननी चाहिए। भारत सरकार के ये फ्री पोर्टल्स यूज़ करें:</p>
+                <ul style="padding-left:20px; margin-top:10px;">
+                    <li style="margin-bottom:8px;">
+                        <strong>SWAYAM Portal:</strong><br>
+                        IIT प्रोफेसर्स के वीडियो लेक्चर फ्री में देखें।<br>
+                        <a href="https://swayam.gov.in/" target="_blank" style="color:var(--accent);">Visit Swayam</a>
+                    </li>
+                    <li style="margin-bottom:8px;">
+                        <strong>NDLI (National Digital Library):</strong><br>
+                        करोड़ों किताबें और नोट्स फ्री में उपलब्ध।<br>
+                        <a href="https://ndl.iitkgp.ac.in/" target="_blank" style="color:var(--accent);">Visit Library</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="guide-header" onclick="toggleGuide(this)">
+                <strong>🧠 Scientific Study Techniques</strong> <span>⬇️</span>
+            </div>
+            <div class="guide-content">
+                <p>स्मार्ट स्टडी का मतलब है कम समय में ज्यादा आउटपुट।</p>
+                <ul style="padding-left:20px; margin-top:10px;">
+                    <li><strong>Pomodoro Technique:</strong> 25 मिनट पढ़ाई + 5 मिनट ब्रेक। हमारा टाइमर इसी के लिए बना है।</li>
+                    <li><strong>Feynman Technique:</strong> टॉपिक पढ़ने के बाद उसे किसी और को (या खुद को) सरल भाषा में समझाएं।</li>
+                    <li><strong>Sleep is crucial:</strong> जो पढ़ा है उसे लॉन्ग-टर्म मेमोरी में डालने के लिए 7 घंटे की नींद ज़रूरी है।</li>
+                </ul>
+            </div>
+        </div>
+
       </div>
     </div>
 
