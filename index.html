@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f1724">
 <title>Study Arc — Focus & Conquer</title>
 <link rel="icon" href="icons/app-logo-192.png" type="image/png">
 <link rel="manifest" href="manifest.json?v=3">
@@ -715,6 +716,15 @@ function generatePlan() {
 }
 
 init();
+
+// 👇 SERVICE WORKER (OFFLINE MODE)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('✅ Service Worker Registered!', reg))
+      .catch(err => console.log('❌ SW Failed:', err));
+  });
+}
 </script>
 </body>
 </html>
