@@ -9,6 +9,56 @@
 <link rel="icon" href="icons/app-logo-192.png" type="image/png">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
+
+<script>
+  // 1. Config Setup
+  const firebaseConfig = {
+    apiKey: "AIzaSyD3cYRcKUetqdNjaObGMgPmCwFinbEJgnE",
+    authDomain: "study-arc-app.firebaseapp.com",
+    projectId: "study-arc-app",
+    storageBucket: "study-arc-app.firebasestorage.app",
+    messagingSenderId: "1010200494786",
+    appId: "1:1010200494786:web:dead51a759b250bfbaf15b"
+  };
+
+  // 2. Initialize
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  // 3. User Permission & Token
+  function initNotifications() {
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        
+        // Aapki VAPID Key
+        messaging.getToken({ vapidKey: 'BHsdG8Sm6I7n_5YRD-hC2H7S1e4GI1qTsj3y-R4fkz_lbSYbIZjSciUqUGEk-AeRfYrR5-WxjsJZH3qyzxicN0M' })
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log('🔥 TOKEN (Save this):', currentToken);
+            // Future: Is token ko database me save kar sakte ho
+          } else {
+            console.log('No registration token available.');
+          }
+        }).catch((err) => {
+          console.log('An error occurred while retrieving token. ', err);
+        });
+      }
+    });
+  }
+
+  // App load hote hi permission mango
+  window.addEventListener('load', initNotifications);
+
+  // Jab app open ho aur message aaye
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    // Optional: Alert user inside app
+    // alert(payload.notification.title + "\n" + payload.notification.body);
+  });
+</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5520401672645952"
      crossorigin="anonymous"></script>
 <style>
@@ -1047,6 +1097,21 @@ function resetSyllabusWizardUI() {
     document.getElementById('wiz-step-1').classList.add('active');
 }
 // --- 🧘 FOCUS TIMER (Fixed & Safe) ---
+/* --- 🔥 NEW: Other Subject & Sound Fix --- */
+// 1. "Other" select karne par input box dikhana
+function checkCustomSubject(el) {
+    const customInput = document.getElementById('customSubjectInput');
+    if (el.value === "Other") {
+        customInput.style.display = "block"; 
+        customInput.style.marginTop = "10px"; // Thoda gap diya
+        customInput.focus();
+    } else {
+        customInput.style.display = "none";
+    }
+}
+
+// 2. Sound Setup (Timer khtm hone par bajegi)
+const finishSound = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 function startQuickFocus() {
     // 1. Negative Value Fix
     const hInput = document.getElementById('quickHrs');
@@ -1115,13 +1180,19 @@ function giveUpFocus() {
 
 function finishFocus() {
     let studied = sessionDuration - timeRemaining;
+    
+    // 🔥 SOUND PLAY KARO (Sirf yahi line nayi hai)
+    finishSound.play().catch(e => console.log("Sound error:", e));
+
     if(studied > 60) {
         let today = new Date().toDateString();
         history[today] = (history[today] || 0) + studied;
         localStorage.setItem('st_history', JSON.stringify(history));
         addXP(Math.floor(studied/60)); 
         alert(`🔥 Session Saved! You earned ${Math.floor(studied/60)} XP`);
-        confetti();
+        
+        // Confetti animation
+        try { confetti(); } catch(e) {}
     }
     closeFocus();
 }
