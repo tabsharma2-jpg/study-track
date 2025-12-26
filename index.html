@@ -406,6 +406,7 @@ body.theme-mint {
       <div class="nav-item" onclick="showSection('challenges', this)">🏆 Challenges</div>
       <div class="nav-item" onclick="showSection('guide', this)">ℹ️ Exam Guide</div>
       <div class="nav-item" onclick="showSection('notes', this)">📓 Mistake Notebook</div>
+      <div class="nav-item" onclick="showSection('analytics', this); updateAnalytics();">📊 Smart Analytics</div>
       <div class="nav-item" onclick="showSection('settings', this)">⚙️ Settings</div>
     </nav>
   </aside>
@@ -630,6 +631,57 @@ body.theme-mint {
          (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </div>
+    </div>
+<div id="section-analytics" class="hidden">
+      <div class="glass-panel">
+        <h2 style="margin-bottom:20px;">📊 Smart Analytics</h2>
+        
+        <div class="info-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid #10b981;">
+             <div style="font-size:10px; text-transform:uppercase; color:#10b981; font-weight:bold; letter-spacing:1px; margin-bottom:5px;">Estimated Completion</div>
+             <div id="ana-finish-date" style="font-size:22px; font-weight:900; color:white;">Calculating...</div>
+             <div id="ana-finish-msg" style="font-size:12px; opacity:0.8; margin-top:5px;">Based on your current speed</div>
+        </div>
+
+        <div style="margin-top:20px;">
+            <h3 style="font-size:16px; margin-bottom:15px;">⚖️ Subject Balance (Real-Time)</h3>
+            
+            <div style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                    <span>Physics</span> <span id="ana-phy-val">0%</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:10px;">
+                    <div id="ana-phy-bar" style="height:100%; width:0%; background:#fbbf24; border-radius:10px; transition:width 1s;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                    <span>Chemistry</span> <span id="ana-chem-val">0%</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:10px;">
+                    <div id="ana-chem-bar" style="height:100%; width:0%; background:#ef4444; border-radius:10px; transition:width 1s;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+                    <span>Biology</span> <span id="ana-bio-val">0%</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:10px;">
+                    <div id="ana-bio-bar" style="height:100%; width:0%; background:#10b981; border-radius:10px; transition:width 1s;"></div>
+                </div>
+            </div>
+            
+            <div id="ana-balance-msg" style="font-size:11px; color:#ef4444; margin-top:5px; font-style:italic;"></div>
+        </div>
+
+        <div style="margin-top:25px;">
+             <h3 style="font-size:16px; margin-bottom:15px;">🔥 Consistency (Last 7 Days)</h3>
+             <div id="ana-graph" style="display:flex; align-items:flex-end; gap:5px; height:60px; padding-bottom:5px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                 </div>
+        </div>
+
+      </div>
     </div>
 <div id="section-settings" class="hidden">
       
@@ -897,6 +949,8 @@ let activeSyllabus = JSON.parse(localStorage.getItem('st_active_syllabus') || 'n
 let challenge = JSON.parse(localStorage.getItem('st_challenge') || '{"active":false}');
 let history = JSON.parse(localStorage.getItem('st_history') || '{}');
 let lastStudyDate = localStorage.getItem('st_last_date');
+// 👇 SUBJECT DATA VARIABLE (Statistics ke liye)
+let subjectStats = JSON.parse(localStorage.getItem('st_subject_stats') || '{"Physics":0, "Chemistry":0, "Biology":0, "Other":0}');
 
 // Timer Globals
 let timerInterval, endTime, currentSubject, wakeLock;
@@ -1219,21 +1273,29 @@ function giveUpFocus() {
     }
 }
 
+// 👇 UPDATED FINISH FOCUS (Saves Subject Data)
 function finishFocus() {
     let studied = sessionDuration - timeRemaining;
     
-    // 🔥 SOUND PLAY KARO (Sirf yahi line nayi hai)
+    // Sound Play
     finishSound.play().catch(e => console.log("Sound error:", e));
-sendLocalNotification("Focus Session Complete! 🎉", "Target achieved! Take a break.");
+    if(typeof sendLocalNotification === "function") sendLocalNotification("Focus Session Complete! 🎉", "Target achieved!");
 
     if(studied > 60) {
         let today = new Date().toDateString();
+        // 1. Save Total History
         history[today] = (history[today] || 0) + studied;
         localStorage.setItem('st_history', JSON.stringify(history));
+        
+        // 2. Save SUBJECT Stats (Real Data Logic)
+        if(currentSubject) {
+            let safeSub = (currentSubject === "Physics" || currentSubject === "Chemistry" || currentSubject === "Biology") ? currentSubject : "Other";
+            subjectStats[safeSub] = (subjectStats[safeSub] || 0) + studied;
+            localStorage.setItem('st_subject_stats', JSON.stringify(subjectStats));
+        }
+
         addXP(Math.floor(studied/60)); 
         alert(`🔥 Session Saved! You earned ${Math.floor(studied/60)} XP`);
-        
-        // Confetti animation
         try { confetti(); } catch(e) {}
     }
     closeFocus();
@@ -1482,6 +1544,85 @@ function hardReset() {
 // ✅ Correct Place for Modal Close
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
+}
+// 👇 SMART ANALYTICS LOGIC ENGINE
+function updateAnalytics() {
+    // A. SYLLABUS PREDICTION
+    let totalChapters = 90; 
+    let doneChapters = 0;
+    if(activeSyllabus && activeSyllabus.chapters) {
+        doneChapters = activeSyllabus.chapters.filter(c => c.done).length;
+        totalChapters = activeSyllabus.chapters.length;
+    }
+
+    let daysPassed = 1; 
+    if(activeSyllabus) {
+        let start = new Date(activeSyllabus.startDate);
+        let now = new Date();
+        daysPassed = Math.max(1, Math.floor((now - start)/(1000*60*60*24)));
+    }
+
+    let speed = doneChapters / daysPassed; 
+    let remaining = totalChapters - doneChapters;
+    let daysNeeded = speed > 0 ? Math.ceil(remaining / speed) : 365;
+    
+    let finishDate = new Date();
+    finishDate.setDate(finishDate.getDate() + daysNeeded);
+    
+    // UI Update for Prediction
+    if(document.getElementById('ana-finish-date')) {
+        document.getElementById('ana-finish-date').innerText = speed > 0 ? finishDate.toDateString() : "Not enough data";
+        document.getElementById('ana-finish-msg').innerText = speed > 0 ? `At speed of ${speed.toFixed(1)} chap/day` : "Complete chapters to see prediction!";
+    }
+
+    // B. REAL SUBJECT BALANCE
+    let totalTime = (subjectStats["Physics"]||0) + (subjectStats["Chemistry"]||0) + (subjectStats["Biology"]||0) + (subjectStats["Other"]||0);
+    
+    if(totalTime === 0) totalTime = 1; // Divide by zero fix
+
+    let p = Math.round(((subjectStats["Physics"]||0) / totalTime) * 100);
+    let c = Math.round(((subjectStats["Chemistry"]||0) / totalTime) * 100);
+    let b = Math.round(((subjectStats["Biology"]||0) / totalTime) * 100);
+
+    if(document.getElementById('ana-phy-bar')) {
+        document.getElementById('ana-phy-bar').style.width = p + "%";
+        document.getElementById('ana-phy-val').innerText = p + "%";
+        
+        document.getElementById('ana-chem-bar').style.width = c + "%";
+        document.getElementById('ana-chem-val').innerText = c + "%";
+        
+        document.getElementById('ana-bio-bar').style.width = b + "%";
+        document.getElementById('ana-bio-val').innerText = b + "%";
+
+        if(p < 10 && c < 10 && b < 10) {
+             document.getElementById('ana-balance-msg').innerText = "ℹ️ Start studying to see your balance.";
+        } else if(Math.min(p, c, b) < 15) {
+             document.getElementById('ana-balance-msg').innerText = "⚠️ Warning: One subject is lagging behind!";
+        } else {
+             document.getElementById('ana-balance-msg').innerText = "✅ Great balance! Keep it up.";
+        }
+    }
+
+    // C. CONSISTENCY GRAPH
+    const graphContainer = document.getElementById('ana-graph');
+    if(graphContainer) {
+        graphContainer.innerHTML = '';
+        for(let i=6; i>=0; i--) {
+            let d = new Date();
+            d.setDate(d.getDate() - i);
+            let key = d.toDateString();
+            let val = history[key] || 0; // Seconds studied
+            let height = Math.min(100, (val / 3600) * 20); // 1 hour = 20px height approx
+            if(val > 0 && height < 10) height = 10; // Min visibility
+            
+            let color = val > 0 ? 'var(--accent)' : 'rgba(255,255,255,0.1)';
+            
+            graphContainer.innerHTML += `
+            <div style="flex:1; height:100%; display:flex; align-items:flex-end; justify-content:center;">
+                <div style="width:60%; background:${color}; height:${height}%; border-radius:4px;"></div>
+            </div>`;
+        }
+    }
 }
 
 // Init
