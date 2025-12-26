@@ -59,6 +59,7 @@ body.theme-matrix {
 
 /* 🔒 GLOBAL LOCK */
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+/* ✅ नया कोड (Zoom Fix) */
 html, body { 
     margin: 0; padding: 0; 
     font-family: var(--font-main); 
@@ -66,10 +67,15 @@ html, body {
     color: var(--text); 
     width: 100%; height: 100%; 
     overflow: hidden; 
-    touch-action: manipulation; /* Double tap zoom off */
-    overscroll-behavior: none; /* No shake/bounce effect */
-    -webkit-user-select: none; /* No text selection */
+    
+    /* 🔥 सबसे जरूरी लाइनें: Zoom रोकने के लिए 🔥 */
+    touch-action: pan-x pan-y; 
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
+    
+    -webkit-user-select: none; 
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 /* Main Layout */
 .app-container { 
@@ -174,19 +180,54 @@ html, body {
 .mobile-header { display: none; justify-content: space-between; align-items: center; padding-bottom: 15px; }
 .overlay-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 800; display: none; backdrop-filter: blur(8px); }
 
+/* --- 📱 MOBILE FIX START --- */
 @media (max-width: 768px) {
-  .app-container { grid-template-columns: 1fr; padding: 15px; height: 100vh; overflow-y: auto; display: block; }
+  .app-container { 
+      grid-template-columns: 1fr; 
+      padding: 15px; 
+      height: 100vh; 
+      overflow-y: auto; 
+      display: block; 
+  }
+  
   .sidebar { 
       position: fixed; top: 0; left: -350px; width: 280px; height: 100%; 
-      z-index: 2000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      /* 🔥 Z-Index increased for APK touch fix */
+      z-index: 10000; 
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      will-change: left;
+      transform: translateZ(0); /* Hardware Acceleration */
       box-shadow: 10px 0 50px rgba(0,0,0,0.9);
+      background: var(--sidebar-bg);
+      backdrop-filter: blur(20px);
   }
+  
   .sidebar.active { left: 0; }
-  .overlay-bg.active { display: block; }
-  .mobile-header { display: flex; }
+  
+  .overlay-bg.active { 
+      display: block; 
+      z-index: 9999;
+  }
+  
+  .mobile-header { 
+      display: flex; 
+      position: relative;
+      z-index: 1001;
+      align-items: center;
+  }
+
+  /* Fix for Hamburger Click Area */
+  .mobile-header button {
+      cursor: pointer;
+      padding: 10px;
+      margin: -10px;
+      z-index: 1002;
+  }
+  
   .main-content { padding-bottom: 100px; }
   #focusOverlay .timer-huge { font-size: 70px; }
 }
+/* --- 📱 MOBILE FIX END --- */
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
