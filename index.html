@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2a0845">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Study Arc V7.0 — Ultimate</title>
@@ -130,13 +130,19 @@ html, body {
 .nav-item { padding: 14px; border-radius: 14px; cursor: pointer; transition: 0.2s; color: var(--text-muted); display: flex; align-items: center; gap: 15px; font-weight: 600; font-size: 15px; }
 .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: var(--accent); border-left: 4px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-/* 🏆 Premium Challenge Box */
+/* ✅ नया फिक्स्ड कोड */
 .challenge-box-premium { 
-    border: 1px solid var(--glass-border); padding: 15px; border-radius: 18px; 
-    text-align: center; background: rgba(0,0,0,0.3); margin-top: auto;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border); 
+    padding: 15px; 
+    border-radius: 18px; 
+    text-align: center; 
+    background: rgba(0,0,0,0.3); 
+    
+    /* 🔥 margin-top: auto HATA DIYA 🔥 */
+    margin-bottom: 20px; /* ताकी नीचे वाले मेनू से थोड़ा गैप रहे */
+    
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5); 
 }
-
 /* 🆔 Header & User Box */
 .header-glass { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .user-box { 
