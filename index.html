@@ -369,6 +369,7 @@ body.theme-mint {
   <div style="font-size: 32px; font-weight: bold; color: white; margin-bottom: 20px;" id="focusSubjectDisplay">SUBJECT</div>
   
   <div class="timer-huge" id="focusTimerDisplay" style="font-size: 80px; font-weight: 900; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0;">00:00:00</div>
+  <div id="endTimeDisplay" style="font-size:16px; color:var(--accent); font-weight:bold; margin-bottom:20px; letter-spacing:1px;"></div>
   
   <div style="display: flex; gap: 15px;">
     <button id="btnPause" class="btn btn-ghost" style="padding: 15px 25px; border:1px solid white;" onclick="toggleTimer()">⏸️ Pause</button>
@@ -975,7 +976,16 @@ function updateUI() {
     if(!profile) return;
     
     // Header Info
-    document.getElementById('userGreet').innerText = `Hello, ${profile.name}`;
+    // 👇 Smart Greeting Logic
+    const hr = new Date().getHours();
+    let greetMsg = "Hello";
+    
+    if (hr < 12) greetMsg = "Good Morning ☀️";
+    else if (hr < 17) greetMsg = "Good Afternoon 🌤️";
+    else if (hr < 21) greetMsg = "Good Evening 🌆";
+    else greetMsg = "Late Night Grind 🦉";
+
+    document.getElementById('userGreet').innerText = `${greetMsg}, ${profile.name}`;
     if(profile.examName) document.getElementById('userExamDisplay').innerText = profile.examName;
     document.getElementById('streakDisplay').innerText = streak;
     
@@ -1160,6 +1170,11 @@ function startQuickFocus() {
     
     // 2. Show Screen FIRST (Important)
     document.getElementById('focusOverlay').style.display = 'flex';
+// 👇 Start Time Calculation Code
+    const now = new Date();
+    const finishTime = new Date(now.getTime() + sessionDuration * 1000);
+    const timeString = finishTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    document.getElementById('endTimeDisplay').innerText = `🔔 Finish at ${timeString}`;
     document.getElementById('focusSubjectDisplay').innerText = subj;
     
     // 3. Safe Wake Lock (Crash Proof)
@@ -1170,9 +1185,6 @@ function startQuickFocus() {
             .catch(err => console.log("Wake Lock Error:", err));
         }
     } catch(e) { console.log("Wake Lock not supported"); }
-
-    // 👇 बैक बटन को लॉक करने के लिए यह लाइन जोड़ें 👇
-history.pushState(null, null, location.href);
 
     runTimer();
 }
@@ -1471,39 +1483,7 @@ function hardReset() {
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
 }
-// 🕵️ ANTI-CHEAT SYSTEM (Phone & Laptop)
-document.addEventListener("visibilitychange", function() {
-    // Check agar user ne app minimize kiya ya tab change kiya
-    if (document.hidden) {
-        // Sirf tab kaam karega agar Focus Timer chal raha ho
-        const overlay = document.getElementById('focusOverlay');
-        
-        if (overlay.style.display === 'flex' && !isPaused && timeRemaining > 0) {
-            toggleTimer(); // ⏸️ Timer ko PAUSE kar do
-            
-            // 🔔 Notification bhej do (Taki user ko pata chale pakda gaya)
-            if(typeof sendLocalNotification === "function") {
-                sendLocalNotification("⚠️ Cheating Detected!", "Timer paused! Don't switch apps while studying.");
-            }
-            
-            // Title badal do (Browser tab ke liye)
-            document.title = "⚠️ Come Back!";
-        }
-    } else {
-        // Jab user wapas aaye
-        document.title = "Study Arc V7.0 — Ultimate";
-    }
-});
-// 🛡️ BACK BUTTON GUARD
-// Agar user Back dabayega to ye function chalega
-window.onpopstate = function () {
-    // Check karo ki kya Timer chal raha hai?
-    if (document.getElementById('focusOverlay').style.display === 'flex') {
-        // User ko wapas usi page par dhakel do (Jaane mat do)
-        history.pushState(null, null, location.href);
-        alert("⛔ Session Active!\nPlease use the 'Give Up' button to exit.");
-    }
-};
+
 // Init
 init();
 </script>
