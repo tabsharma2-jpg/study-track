@@ -62,6 +62,7 @@ body.theme-matrix {
 /* ✅ नया कोड (Zoom Fix) */
 html, body { 
     margin: 0; padding: 0; 
+    font-size: 16px;
     font-family: var(--font-main); 
     background: var(--bg-gradient); 
     color: var(--text); 
@@ -181,7 +182,7 @@ html, body {
 .overlay-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 800; display: none; backdrop-filter: blur(8px); }
 
 /* --- 📱 MOBILE FIX START --- */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .app-container { 
       grid-template-columns: 1fr; 
       padding: 15px; 
