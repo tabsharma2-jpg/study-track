@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-arc-v7.0-offline";
+const CACHE_NAME = "study-arc-v3.2-offline";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
@@ -8,11 +8,12 @@ const STATIC_ASSETS = [
   "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
 ];
 
-// --- 1. Install Event (Cache Files) ---
+// 1. Install Event (Cache Files)
 self.addEventListener("install", (e) => {
   e.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
+      console.log("[Service Worker] Caching Assets...");
       try {
         await cache.addAll(STATIC_ASSETS);
       } catch (err) {
@@ -23,7 +24,7 @@ self.addEventListener("install", (e) => {
   self.skipWaiting();
 });
 
-// --- 2. Activate Event (Clean Old Cache) ---
+// 2. Activate Event (Clean Old Cache)
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
@@ -35,44 +36,17 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// --- 3. Fetch Event (Offline Support) ---
+// 3. Fetch Event (Offline Support)
 self.addEventListener("fetch", (e) => {
+  // Navigation requests (HTML)
   if (e.request.mode === "navigate") {
     e.respondWith(
       fetch(e.request).catch(() => caches.match("./index.html"))
     );
   } else {
+    // Other requests (Images, JS, CSS)
     e.respondWith(
       caches.match(e.request).then((cached) => cached || fetch(e.request))
     );
   }
-});
-
-// --- 🔥 FIREBASE BACKGROUND NOTIFICATIONS (New Code) 🔥 ---
-importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js');
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD3cYRcKUetqdNjaObGMgPmCwFinbEJgnE",
-  authDomain: "study-arc-app.firebaseapp.com",
-  projectId: "study-arc-app",
-  storageBucket: "study-arc-app.firebasestorage.app",
-  messagingSenderId: "1010200494786",
-  appId: "1:1010200494786:web:dead51a759b250bfbaf15b"
-};
-
-firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage((payload) => {
-  console.log('[Background Message] ', payload);
-  
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: './icons/app-logo-192.png',
-    badge: './icons/app-logo-192.png'
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
 });

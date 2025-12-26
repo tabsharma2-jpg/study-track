@@ -2,62 +2,53 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#2a0845">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Study Arc V7.0 — Ultimate</title>
 <link rel="icon" href="icons/app-logo-192.png" type="image/png">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
-
 <script>
-  // 1. Config Setup
-  const firebaseConfig = {
-    apiKey: "AIzaSyD3cYRcKUetqdNjaObGMgPmCwFinbEJgnE",
-    authDomain: "study-arc-app.firebaseapp.com",
-    projectId: "study-arc-app",
-    storageBucket: "study-arc-app.firebasestorage.app",
-    messagingSenderId: "1010200494786",
-    appId: "1:1010200494786:web:dead51a759b250bfbaf15b"
-  };
-
-  // 2. Initialize
-  firebase.initializeApp(firebaseConfig);
-  const messaging = firebase.messaging();
-
-  // 3. User Permission & Token
-  function initNotifications() {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-        
-        // Aapki VAPID Key
-        messaging.getToken({ vapidKey: 'BHsdG8Sm6I7n_5YRD-hC2H7S1e4GI1qTsj3y-R4fkz_lbSYbIZjSciUqUGEk-AeRfYrR5-WxjsJZH3qyzxicN0M' })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log('🔥 TOKEN (Save this):', currentToken);
-            // Future: Is token ko database me save kar sakte ho
-          } else {
-            console.log('No registration token available.');
-          }
-        }).catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
-        });
-      }
-    });
+  // 1. Permission Maango (Jab App load ho)
+  function requestNotifyPermission() {
+    if (!("Notification" in window)) {
+      console.log("Browser does not support notifications");
+      return;
+    }
+    
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          sendLocalNotification("Welcome Abhinav!", "Notifications are active now. 🚀");
+        }
+      });
+    }
   }
 
-  // App load hote hi permission mango
-  window.addEventListener('load', initNotifications);
+  // 2. Notification Bhejne wala function
+  function sendLocalNotification(title, body) {
+    if (Notification.permission === "granted") {
+      // Mobile pe vibration ke liye
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      
+      const notif = new Notification(title, {
+        body: body,
+        icon: 'icons/app-logo-192.png', // Make sure icon folder me ye image ho
+        vibrate: [200, 100, 200],
+        tag: 'study-arc-alert'
+      });
+      
+      // Notification par click karne par app khul jaye
+      notif.onclick = function() {
+        window.focus();
+        notif.close();
+      };
+    }
+  }
 
-  // Jab app open ho aur message aaye
-  messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-    // Optional: Alert user inside app
-    // alert(payload.notification.title + "\n" + payload.notification.body);
-  });
+  // Page load hote hi permission maang lo
+  window.addEventListener('load', requestNotifyPermission);
 </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5520401672645952"
      crossorigin="anonymous"></script>
@@ -319,6 +310,37 @@ html, body {
 /* --- 🎨 NEW FREE THEMES --- */
 body.theme-ocean { --bg-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); --accent: #00ffff; --sidebar-bg: rgba(0,20,50,0.8); }
 body.theme-nebula { --bg-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); --accent: #ff00cc; --sidebar-bg: rgba(30,0,50,0.8); }
+/* 🌌 Theme: Aura Night (Deep Purple & Pink) */
+body.theme-aura { 
+    --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); 
+    --sidebar-bg: rgba(15, 12, 41, 0.8);
+    --accent: #ff0080; 
+    --accent-grad: linear-gradient(135deg, #ff0080, #7928ca); 
+    --glass-border: 1px solid rgba(255, 0, 128, 0.3);
+}
+
+/* ❄️ Theme: Arctic Frost (Clean & Professional) */
+body.theme-arctic { 
+    --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); 
+    --sidebar-bg: rgba(255, 255, 255, 0.7);
+    --accent: #00796b; 
+    --accent-grad: linear-gradient(135deg, #00796b, #004d40); 
+    --text: #002d2d; 
+    --text-muted: rgba(0, 45, 45, 0.7);
+    --card-bg: rgba(0, 0, 0, 0.05);
+    --glass-border: 1px solid rgba(0, 121, 107, 0.2);
+}
+/* 🏥 Soft Mint Theme (Doctor Mode) */
+body.theme-mint { 
+    --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); 
+    --sidebar-bg: rgba(255, 255, 255, 0.8);
+    --accent: #16a34a; 
+    --accent-grad: linear-gradient(135deg, #16a34a, #15803d); 
+    --text: #14532d; 
+    --text-muted: rgba(20, 83, 45, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: 1px solid rgba(22, 163, 74, 0.2);
+}
 </style>
 </head>
 <body class="theme-sunset">
@@ -637,6 +659,9 @@ body.theme-nebula { --bg-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 1
                 <option value="matrix">💻 Matrix Green</option>
                 <option value="ocean">🌊 Ocean Depth</option>
                 <option value="nebula">🌌 Nebula</option>
+                <option value="aura">🌌 Aura Night (Premium)</option>
+                <option value="arctic">❄️ Arctic Frost (Clean)</option>
+                <option value="mint">🏥 Soft Mint (Doctor Mode)</option>
             </select>
         </div>
         
@@ -662,6 +687,7 @@ body.theme-nebula { --bg-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 1
         <div style="text-align:center; margin-top:30px; font-size:12px; color:var(--text-muted);">
             Study Arc V7.2 • Powered by <b>Abhi Sarswat</b> ❤️
         </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="window.location.reload()">🔄 Refresh App</button>
         <button class="btn btn-danger" style="width:100%; margin-top:10px;" onclick="hardReset()">⚠️ Factory Reset</button>
       </div>
     </div>
@@ -1144,7 +1170,10 @@ function startQuickFocus() {
             .catch(err => console.log("Wake Lock Error:", err));
         }
     } catch(e) { console.log("Wake Lock not supported"); }
-    
+
+    // 👇 बैक बटन को लॉक करने के लिए यह लाइन जोड़ें 👇
+history.pushState(null, null, location.href);
+
     runTimer();
 }
 
@@ -1183,6 +1212,7 @@ function finishFocus() {
     
     // 🔥 SOUND PLAY KARO (Sirf yahi line nayi hai)
     finishSound.play().catch(e => console.log("Sound error:", e));
+sendLocalNotification("Focus Session Complete! 🎉", "Target achieved! Take a break.");
 
     if(studied > 60) {
         let today = new Date().toDateString();
@@ -1441,7 +1471,39 @@ function hardReset() {
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
 }
-
+// 🕵️ ANTI-CHEAT SYSTEM (Phone & Laptop)
+document.addEventListener("visibilitychange", function() {
+    // Check agar user ne app minimize kiya ya tab change kiya
+    if (document.hidden) {
+        // Sirf tab kaam karega agar Focus Timer chal raha ho
+        const overlay = document.getElementById('focusOverlay');
+        
+        if (overlay.style.display === 'flex' && !isPaused && timeRemaining > 0) {
+            toggleTimer(); // ⏸️ Timer ko PAUSE kar do
+            
+            // 🔔 Notification bhej do (Taki user ko pata chale pakda gaya)
+            if(typeof sendLocalNotification === "function") {
+                sendLocalNotification("⚠️ Cheating Detected!", "Timer paused! Don't switch apps while studying.");
+            }
+            
+            // Title badal do (Browser tab ke liye)
+            document.title = "⚠️ Come Back!";
+        }
+    } else {
+        // Jab user wapas aaye
+        document.title = "Study Arc V7.0 — Ultimate";
+    }
+});
+// 🛡️ BACK BUTTON GUARD
+// Agar user Back dabayega to ye function chalega
+window.onpopstate = function () {
+    // Check karo ki kya Timer chal raha hai?
+    if (document.getElementById('focusOverlay').style.display === 'flex') {
+        // User ko wapas usi page par dhakel do (Jaane mat do)
+        history.pushState(null, null, location.href);
+        alert("⛔ Session Active!\nPlease use the 'Give Up' button to exit.");
+    }
+};
 // Init
 init();
 </script>
