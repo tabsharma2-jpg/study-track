@@ -1065,6 +1065,15 @@ document.getElementById('guide-content-area').innerHTML = GUIDE_HTML;
 </script>
 <script>
 /* --- 🧠 PART 4: THE MASTER LOGIC (V7.0) --- */
+// 🚫 SECURITY LOCK: Disable Right Click & Inspect
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.onkeydown = function(e) {
+    if (e.keyCode == 123) return false; // Disable F12
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Disable Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; // Disable Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Disable Ctrl+Shift+J
+    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Disable Ctrl+U
+}
 
 // --- 1. STATE MANAGEMENT ---
 let profile = JSON.parse(localStorage.getItem('st_profile'));
