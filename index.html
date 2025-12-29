@@ -1690,5 +1690,17 @@ function closeModal(id) {
 // Init
 init();
 </script>
+  <script>
+  // 🚀 Offline Support (Service Worker Link)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('✅ Service Worker Registered!', reg.scope))
+        .catch(err => console.log('❌ SW Failed!', err));
+    });
+  }
+</script>
+
 </body>
+
 </html>
